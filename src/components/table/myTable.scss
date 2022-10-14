@@ -1,0 +1,24 @@
+@import '../../utils/colours.scss';
+
+tr, td {
+  padding: 1rem;
+  border: 10px;
+}
+
+thead {
+  font-weight: 900;
+  color: black;
+  background-color: $brand-bg-dark;
+  
+}
+
+.table{
+  &-head{
+    border-style: outset;
+  border-color: $brand-bg-dark;
+  }
+  &-body{
+    border-style: outset;
+  }
+}
+
