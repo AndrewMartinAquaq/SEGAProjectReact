@@ -1,0 +1,34 @@
+@import '../../utils/colours.scss';
+
+.topnav {
+  overflow: hidden;
+  background-color: $brand-bg-dark;
+  border-style: outset;
+  border-color: $brand-bd-dark;
+  
+  border-width: 10;
+}
+
+
+.topnav div {
+  float: left;
+  color: $brand-bg;
+  text-align: center;
+  padding: 14px 14px;
+  text-decoration: none;
+  font-size: 17px;
+  list-style: none;
+}
+
+.topnav div:hover {
+  background-color: $brand-bg;
+  color: black;
+  
+}
+
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}

@@ -15,10 +15,14 @@ thead {
 .table{
   &-head{
     border-style: outset;
-  border-color: $brand-bg-dark;
+  border-color: $brand-bd-dark;
   }
   &-body{
     border-style: outset;
   }
+}
+
+.error{
+  color: rgb(255, 15, 15);
 }
 

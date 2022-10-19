@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "cors": "^2.8.5",
     "css-loader": "^6.7.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-import": "^2.26.0",
@@ -29,6 +30,7 @@
     "babel-loader": "^8.2.5",
     "eslint": "^8.24.0",
     "node-sass": "^7.0.3",
+    "react-router-dom": "^6.4.2",
     "sass-loader": "^13.0.2"
   },
   "scripts": {

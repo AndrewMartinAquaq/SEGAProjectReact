@@ -6,10 +6,12 @@ module.exports = {
   mode: 'development',
   output: {
     path: path.resolve(__dirname, './dist'),
-    filename: 'index_bundle.js'
+    filename: 'index_bundle.js',
+    publicPath: '/'
   },
   target: 'web',
   devServer: {
+    historyApiFallback: true,
     port: '5000',
     static: {
       directory: path.join(__dirname, 'public')
@@ -29,7 +31,7 @@ module.exports = {
         use: 'babel-loader'
       },
       {
-        test: /\.scss$/,
+        test: /\.(css|sass|scss)$/,
         use: ['style-loader',
           'css-loader',
           'sass-loader'

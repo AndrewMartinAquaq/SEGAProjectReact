@@ -1,13 +1,13 @@
 import React from 'react'
 import Header from '../header/header'
-import MyTable from '../table/myTable'
+import StudentTable from '../table/StudentTable'
 import './main.scss'
 
 function Main() {
   return (
     <div>
       <Header myHeader="My Header Value" />
-      <MyTable />
+      <StudentTable />
     </div>
   )
 }
