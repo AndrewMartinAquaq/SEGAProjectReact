@@ -41,10 +41,24 @@ function StudentTable() {
   }, [mainData, studentMessage])
 
   const updateRow = (value, rowData, field) => {
-    const rowToUpdate = mainData.filter((row) => (row.id === rowData.id))
-    console.log('rowToUpdate[0]: ', rowToUpdate[0])
+    const rowToUpdate = mainData.filter((row) => (row.id === rowData.id))[0]
     console.log('field: ', field)
-    rowToUpdate[0][field] = value
+    console.log('rowToUpdate: ', rowToUpdate)
+    const valuePrev = rowData[field]
+    const student = rowData
+    student[field] = value
+    if (rowToUpdate[field] !== valuePrev) {
+      fetch(`${studentUrl}/${rowData.id}`, { method: 'PUT', body: JSON.stringify(student), headers: { 'Content-Type': 'application/json' } })
+        .then((response) => {
+          if (response.ok) {
+            rowToUpdate[field] = value
+          } else {
+            rowToUpdate[field] = `${valuePrev} `
+            response.json().then((data) => { console.log('put error', data) })
+            console.log('pre value', valuePrev)
+          }
+        })
+    }
   }
 
   const removeRow = ((rowData) => {
@@ -62,111 +76,121 @@ function StudentTable() {
     setInputs((values) => ({ ...values, [name]: value }))
   }
 
+  const handelEditRow = (dataId) => {
+    if (dataId === editingRow) {
+      setEditingRow()
+    } else {
+      setEditingRow(dataId)
+    }
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault()
     console.log('form data', inputs)
-    const newId = mainData[mainData.length - 1].id + 1
-    const student = {
-      id: newId, firstName: inputs.firstName, lastName: inputs.lastName, graduationDate: inputs.graduationDate
-    }
-    fetch(studentUrl, { method: 'POST', body: JSON.stringify(student), headers: { 'Content-Type': 'application/json' } })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('data received: ', data)
+    fetch(studentUrl, { method: 'POST', body: JSON.stringify(inputs), headers: { 'Content-Type': 'application/json' } })
+      .then((response) => {
+        if (response.ok) {
+          response.json().then((data) => {
+            console.log('data received: ', data)
+            const newId = parseInt(data.Link.charAt(data.Link.length - 1), 10)
+            const student = {
+              id: newId, firstName: inputs.firstName, lastName: inputs.lastName, graduationDate: inputs.graduationDate
+            }
+            setMainData(() => [...mainData, student])
+          })
+        }
       })
-      .then(() => setMainData(() => [...mainData, student]))
-    console.log('list', mainData)
   }
 
   return (
     <div>
-      <table>
-        <thead>
-          <tr>
-            {headerCols.map((col) => (
-              <td className="table-head">
-                {col}
-              </td>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {mainData.map((data) => (
-            <tr key={data.id}>
-              {Object.entries(data).map(([prop, value]) => (
-                <td
-                  className="table-body"
-                  name={prop}
-                  contentEditable={data.id === editingRow}
-                // eslint-disable-next-line react/no-unknown-property
-                  field={prop}
-                  onBlur={(event) => {
-                    updateRow(event.target.innerHTML, data, prop)
-                  }}
-                >
-                  {value}
+      <form onSubmit={handleSubmit}>
+        <table>
+          <thead>
+            <tr>
+              {headerCols.map((col) => (
+                <td className="table-head" key={col}>
+                  {col}
                 </td>
               ))}
+            </tr>
+          </thead>
+          <tbody>
+            {mainData.map((data) => (
+              <tr key={data.id}>
+                {Object.entries(data).map(([prop, value]) => (
+                  <td
+                    key={`${data.id}/${prop}`}
+                    className="table-body"
+                    name={prop}
+                    contentEditable={(data.id === editingRow) && (prop !== 'id')}
+                // eslint-disable-next-line react/no-unknown-property
+                    field={prop}
+                    onBlur={(event) => {
+                      updateRow(event.target.innerHTML, data, prop)
+                    }}
+                  >
+                    {value}
+                  </td>
+                ))}
+                <td className="table-body" key={`${data.id}/edit`}>
+                  <button type="button" onClick={() => { handelEditRow(data.id) }}>
+                    Edit Row
+                  </button>
+                </td>
+                <td className="table-body" key={`${data.id}/delete`}>
+                  <button type="button" onClick={() => { removeRow(data) }}>
+                    Delete Row
+                  </button>
+                </td>
+                <td className="table-body" key={`${data.id}/link`}>
+                  <Link to={`/students/${data.id}`}>
+                    <button type="button">go to student</button>
+                  </Link>
+                </td>
+              </tr>
+            ))}
+            <tr>
               <td className="table-body">
-                <button type="button" onClick={() => { setEditingRow(data.id) }}>
-                  Edit Row
-                </button>
+                #
               </td>
               <td className="table-body">
-                <button type="button" onClick={() => { removeRow(data) }}>
-                  Delete Row
-                </button>
+                <input
+                  size="10"
+                  type="text"
+                  name="firstName"
+                  value={inputs.firstName || ''}
+                  onChange={handleChange}
+                />
               </td>
               <td className="table-body">
-                <Link to={`/students/${data.id}`}>
-                  go to student
-                </Link>
+                <input
+                  size="10"
+                  type="text"
+                  name="lastName"
+                  value={inputs.lastName || ''}
+                  onChange={handleChange}
+                />
+              </td>
+              <td className="table-body">
+                <input
+                  size="10"
+                  type="text"
+                  name="graduationDate"
+                  value={inputs.graduationDate || ''}
+                  onChange={handleChange}
+                />
+              </td>
+              <td className="table-body">
+                <input type="submit" />
               </td>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </form>
       <br />
       <h4>{studentMessage}</h4>
       <br />
-      <form onSubmit={handleSubmit}>
-        <label>
-          Enter First Name:
-          <input
-            type="text"
-            name="firstName"
-            value={inputs.firstName || ''}
-            onChange={handleChange}
-          />
-        </label>
-        <br />
-        <br />
-        <label>
-          Enter Last Name:
-          <input
-            type="text"
-            name="lastName"
-            value={inputs.lastName || ''}
-            onChange={handleChange}
-          />
-        </label>
-        <br />
-        <br />
-        <label>
-          Enter Gradutation Date:
-          <input
-            type="text"
-            name="graduationDate"
-            value={inputs.graduationDate || ''}
-            onChange={handleChange}
-          />
-        </label>
-        <br />
-        <br />
-        <input type="submit" />
-        <br />
-        <br />
-      </form>
     </div>
   )
 }

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import Header from '../header/header'
 
 function StudentRecordTable() {
   const params = useParams()
+
+  const navigate = useNavigate()
 
   const headerCols = [
     'Id',
@@ -21,74 +24,95 @@ function StudentRecordTable() {
   const [editingRow, setEditingRow] = useState()
 
   const updateRow = (value, rowData, field) => {
-    const rowToUpdate = mainData.filter((row) => (row.id === rowData.id))
-    console.log('rowToUpdate[0]: ', rowToUpdate[0])
+    const rowToUpdate = mainData
     console.log('field: ', field)
-    rowToUpdate[0][field] = value
+    console.log('rowToUpdate: ', rowToUpdate)
+    const valuePrev = rowData[field]
+    const student = rowData
+    student[field] = value
+    if (rowToUpdate[field] !== valuePrev) {
+      fetch(studentUrl, { method: 'PUT', body: JSON.stringify(student), headers: { 'Content-Type': 'application/json' } })
+        .then((response) => {
+          if (response.ok) {
+            rowToUpdate[field] = value
+          } else {
+            rowToUpdate[field] = `${valuePrev} `
+            response.json().then((data) => { console.log('put error', data) })
+            console.log('pre value', valuePrev)
+          }
+        })
+    }
   }
 
-  const removeRow = ((rowData) => {
-    console.log('remove row', rowData)
-    console.log('filter', mainData.filter((row) => (row.id !== rowData.id)))
-    fetch(`${studentUrl}/${rowData.id}`, { method: 'DELETE' })
-      .then(() => setMainData(mainData.filter((row) => (row.id !== rowData.id))))
-  })
+  const handelEditRow = (dataId) => {
+    if (dataId === editingRow) {
+      setEditingRow()
+    } else {
+      setEditingRow(dataId)
+    }
+  }
+
+  const removeRow = (() => fetch(studentUrl, { method: 'DELETE' }).then(() => navigate('/students'))
+  )
 
   useEffect(() => {
     if (mainData.id == null) {
       fetch(studentUrl)
-        .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) {
+            navigate('/students')
+          }
+          return response.json()
+        })
         .then((data) => {
           console.log('data received: ', data)
           setMainData(data)
         })
     }
-  }, [mainData, studentUrl, editingRow])
+  }, [mainData, studentUrl, editingRow, navigate])
 
   return (
     <div>
-      <h1>
-        StudentRecordTable-
-        <table>
-          <thead>
-            <tr>
-              {headerCols.map((col) => (
-                <td className="table-head">
-                  {col}
-                </td>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            <tr key={mainData.id}>
-              {Object.entries(mainData).map(([prop, value]) => (
-                <td
-                  className="table-body"
-                  name={prop}
-                  contentEditable={mainData.id === editingRow}
+      <Header header="Student Records Table - " />
+      <table>
+        <thead>
+          <tr>
+            {headerCols.map((col) => (
+              <td className="table-head">
+                {col}
+              </td>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          <tr key={mainData.id}>
+            {Object.entries(mainData).map(([prop, value]) => (
+              <td
+                className="table-body"
+                name={prop}
+                contentEditable={mainData.id === editingRow}
                 // eslint-disable-next-line react/no-unknown-property
-                  field={prop}
-                  onBlur={(event) => {
-                    updateRow(event.target.innerHTML, mainData, prop)
-                  }}
-                >
-                  {value}
-                </td>
-              ))}
-              <td className="table-body">
-                <button type="button" onClick={() => { setEditingRow(mainData.id) }}>
-                  Edit Row
-                </button>
+                field={prop}
+                onBlur={(event) => {
+                  updateRow(event.target.innerHTML, mainData, prop)
+                }}
+              >
+                {value}
               </td>
-              <td className="table-body">
-                <button type="button" onClick={() => { removeRow(mainData) }}>
-                  Delete Row
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </h1>
+            ))}
+            <td className="table-body">
+              <button type="button" onClick={() => { handelEditRow(mainData.id) }}>
+                Edit Row
+              </button>
+            </td>
+            <td className="table-body">
+              <button type="button" onClick={() => { removeRow() }}>
+                Delete Row
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <br />
       <br />
     </div>

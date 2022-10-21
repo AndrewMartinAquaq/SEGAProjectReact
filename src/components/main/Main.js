@@ -6,7 +6,7 @@ import './main.scss'
 function Main() {
   return (
     <div>
-      <Header myHeader="My Header Value" />
+      <Header header="Students Table -" />
       <StudentTable />
     </div>
   )

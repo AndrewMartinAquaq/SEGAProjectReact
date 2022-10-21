@@ -10,9 +10,7 @@ function StudentCoursesTable() {
     'Capacity',
     'Credit',
     'Subject',
-    'Semester',
-    'Edit',
-    'Delete'
+    'Semester'
   ]
 
   const [semesterData, setSemesterData] = useState('')
@@ -46,22 +44,6 @@ function StudentCoursesTable() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [semesterData])
 
-  const [editingRow, setEditingRow] = useState()
-
-  const updateRow = (value, rowData, field) => {
-    const rowToUpdate = mainData.filter((row) => (row.id === rowData.id))
-    console.log('rowToUpdate[0]: ', rowToUpdate[0])
-    console.log('field: ', field)
-    rowToUpdate[0][field] = value
-  }
-
-  const removeRow = ((rowData) => {
-    console.log('remove row', rowData)
-    console.log('filter', mainData.filter((row) => (row.id !== rowData.id)))
-    fetch(`${courseUrl}/${rowData.id}`, { method: 'DELETE' })
-      .then(() => setMainData(mainData.filter((row) => (row.id !== rowData.id))))
-  })
-
   return (
     <div>
       <form>
@@ -79,7 +61,7 @@ function StudentCoursesTable() {
         <thead>
           <tr>
             {headerCols.map((col) => (
-              <td className="table-head">
+              <td className="table-head" key={col}>
                 {col}
               </td>
             ))}
@@ -90,28 +72,15 @@ function StudentCoursesTable() {
             <tr key={data.id}>
               {Object.entries(data).map(([prop, value]) => (
                 <td
+                  key={`${data.id}/${prop}`}
                   className="table-body"
                   name={prop}
-                  contentEditable={data.id === editingRow}
                   // eslint-disable-next-line react/no-unknown-property
                   field={prop}
-                  onBlur={(event) => {
-                    updateRow(event.target.innerHTML, data, prop)
-                  }}
                 >
                   {value}
                 </td>
               ))}
-              <td className="table-body">
-                <button type="button" onClick={() => { setEditingRow(data.id) }}>
-                  Edit Row
-                </button>
-              </td>
-              <td className="table-body">
-                <button type="button" onClick={() => { removeRow(data) }}>
-                  Delete Row
-                </button>
-              </td>
             </tr>
           ))}
         </tbody>

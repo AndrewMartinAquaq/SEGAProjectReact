@@ -5,21 +5,10 @@ body{
   color: $brand-header;
 }
 
-//.brand-page-name{
-//  color: $brand-colourA;
-//}
-
-//.brand-page-title{
-//  color: $brand-colourB
-//}
-
 .brand{
   &-page{
     &-name{
-    color : $brand-colourA
-    }
-    &-title{
-    color: $brand-colourB
+    color : $brand-header
     }
   }
 }
