@@ -1,85 +1,62 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import './StudentTable.scss'
 
-function StudentTable() {
+function CourseTable() {
   const headerCols = [
     'Id',
-    'First Name',
-    'Last Name',
-    'Gradutation Year',
+    'Course Name',
+    'Capacity',
+    'Credit',
+    'Subject',
+    'Semester',
     'Edit',
     'Delete'
   ]
 
-  const options = [
-    { value: 'none', label: 'None' },
-    { value: 'name', label: 'Name' },
-    { value: 'semester', label: 'Semester' }
-  ]
+  // const mainData = []
 
-  const siteCode = 'student'
-  const [studentUrl, setStudentUrl] = useState(`http://localhost:8080/api/${siteCode}`)
+  const siteCode = 'course'
+  const [courseUrl, setCourseUrl] = useState(`http://localhost:8080/api/${siteCode}`)
+  const [searchData, setSearchData] = useState('')
 
   const [mainData, setMainData] = useState([])
   const [editingRow, setEditingRow] = useState()
-  const [studentMessage, setStudentMessage] = useState('')
-  const [studentError, setStudentError] = useState('')
-
-  const [hideFilter, setHideFilter] = useState(true)
-
-  const [state, setState] = useState({
-    selectedOption: 'none'
-  })
-
-  const [searchData, setSearchData] = useState('')
+  const [courseMessage, setCourseMessage] = useState('')
 
   useEffect(() => {
-    if (state.selectedOption === 'none') {
-      setStudentUrl(`http://localhost:8080/api/${siteCode}`)
-      setHideFilter(true)
-    } else if (state.selectedOption === 'name') {
-      setStudentUrl(`http://localhost:8080/api/${siteCode}/name?name=${searchData}`)
-      setHideFilter(false)
-    } else if (state.selectedOption === 'semester') {
-      setStudentUrl(`http://localhost:8080/api/${siteCode}/semester?semester=${searchData}`)
-      setHideFilter(false)
+    if (searchData === '') {
+      setCourseUrl(`http://localhost:8080/api/${siteCode}`)
+    } else {
+      setCourseUrl(`http://localhost:8080/api/${siteCode}?subject=${searchData}`)
     }
-  }, [state, searchData])
+  }, [searchData])
 
   useEffect(() => {
-    fetch(studentUrl)
-      .then((response) => {
-        if (response.ok) {
-          setStudentError('')
-          return response.json()
-        }
-        response.json().then((error) => setStudentError(error.message))
-        return []
-      })
+    fetch(courseUrl)
+      .then((response) => response.json())
       .then((data) => {
         console.log('data received: ', data)
         setMainData(data)
       })
-  }, [studentUrl])
+  }, [courseUrl, searchData])
 
   useEffect(() => {
     if (mainData.length === 0) {
-      setStudentMessage('No students recorded - use the form to add one')
+      setCourseMessage('No courses recorded - use the form to add one')
     } else {
-      setStudentMessage('')
+      setCourseMessage('')
     }
-  }, [mainData, studentMessage])
+  }, [mainData, courseMessage])
 
   const updateRow = (value, rowData, field) => {
     const rowToUpdate = mainData.filter((row) => (row.id === rowData.id))[0]
     console.log('field: ', field)
     console.log('rowToUpdate: ', rowToUpdate)
     const valuePrev = rowData[field]
-    const student = rowData
-    student[field] = value
+    const course = rowData
+    course[field] = value
     if (rowToUpdate[field] !== valuePrev) {
-      fetch(`${studentUrl}/${rowData.id}`, { method: 'PUT', body: JSON.stringify(student), headers: { 'Content-Type': 'application/json' } })
+      fetch(`${courseUrl}/${rowData.id}`, { method: 'PUT', body: JSON.stringify(course), headers: { 'Content-Type': 'application/json' } })
         .then((response) => {
           if (response.ok) {
             rowToUpdate[field] = value
@@ -95,13 +72,13 @@ function StudentTable() {
   const removeRow = ((rowData) => {
     console.log('remove row', rowData)
     console.log('filter', mainData.filter((row) => (row.id !== rowData.id)))
-    fetch(`${studentUrl}/${rowData.id}`, { method: 'DELETE' })
+    fetch(`${courseUrl}/${rowData.id}`, { method: 'DELETE' })
       .then(() => setMainData(mainData.filter((row) => (row.id !== rowData.id))))
   })
 
   const [inputs, setInputs] = useState({})
 
-  const handleFormChange = (event) => {
+  const handleChange = (event) => {
     const { name } = event.target
     const { value } = event.target
     setInputs((values) => ({ ...values, [name]: value }))
@@ -118,45 +95,38 @@ function StudentTable() {
   const handleSubmit = (event) => {
     event.preventDefault()
     console.log('form data', inputs)
-    fetch(studentUrl, { method: 'POST', body: JSON.stringify(inputs), headers: { 'Content-Type': 'application/json' } })
+    fetch(courseUrl, { method: 'POST', body: JSON.stringify(inputs), headers: { 'Content-Type': 'application/json' } })
       .then((response) => {
         if (response.ok) {
           response.json().then((data) => {
             console.log('data received: ', data)
             const newId = parseInt(data.Link.charAt(data.Link.length - 1), 10)
-            const student = {
-              id: newId, firstName: inputs.firstName, lastName: inputs.lastName, graduationDate: inputs.graduationDate
+            const course = {
+              id: newId,
+              courseName: inputs.courseName,
+              capacity: inputs.capacity,
+              credit: inputs.credit,
+              subject: inputs.subject,
+              semester: inputs.semester
             }
-            setMainData(() => [...mainData, student])
+            setMainData(() => [...mainData, course])
           })
         }
       })
   }
 
-  const handleSelectChange = ({ target }) => {
-    setState({
-      selectedOption: target.value
-    })
-  }
-
   return (
     <div>
-      <select
-        value={state.selectedOption}
-        onChange={handleSelectChange}
-      >
-        {options.map(({ value, label }) => <option key={value} value={value}>{label}</option>)}
-      </select>
-      <label hidden={hideFilter}>
-        {' '}
-        Filter by
-        {' '}
-        {state.selectedOption}
-        {' '}
+      <label>
+        Filter by Subject:
+        <input
+          type="text"
+          value={searchData}
+          onChange={(e) => setSearchData(e.target.value)}
+        />
       </label>
-      <input type="text" value={searchData} onChange={(e) => setSearchData(e.target.value)} hidden={hideFilter} />
       <br />
-      <h4 className="error">{studentError}</h4>
+      <br />
       <form onSubmit={handleSubmit}>
         <table>
           <thead>
@@ -196,11 +166,6 @@ function StudentTable() {
                     Delete Row
                   </button>
                 </td>
-                <td className="table-body" key={`${data.id}/link`}>
-                  <Link to={`/students/${data.id}`}>
-                    <button type="button">go to student</button>
-                  </Link>
-                </td>
               </tr>
             ))}
             <tr>
@@ -211,27 +176,43 @@ function StudentTable() {
                 <input
                   size="10"
                   type="text"
-                  name="firstName"
-                  value={inputs.firstName || ''}
-                  onChange={handleFormChange}
+                  name="courseName"
+                  value={inputs.courseName || ''}
+                  onChange={handleChange}
+                />
+              </td>
+              <td className="table-body">
+                <input
+                  type="number"
+                  name="capacity"
+                  value={inputs.capacity || ''}
+                  onChange={handleChange}
+                />
+              </td>
+              <td className="table-body">
+                <input
+                  type="number"
+                  name="credit"
+                  value={inputs.credit || ''}
+                  onChange={handleChange}
                 />
               </td>
               <td className="table-body">
                 <input
                   size="10"
                   type="text"
-                  name="lastName"
-                  value={inputs.lastName || ''}
-                  onChange={handleFormChange}
+                  name="subject"
+                  value={inputs.subject || ''}
+                  onChange={handleChange}
                 />
               </td>
               <td className="table-body">
                 <input
                   size="10"
                   type="text"
-                  name="graduationDate"
-                  value={inputs.graduationDate || ''}
-                  onChange={handleFormChange}
+                  name="semester"
+                  value={inputs.semester || ''}
+                  onChange={handleChange}
                 />
               </td>
               <td className="table-body">
@@ -242,10 +223,10 @@ function StudentTable() {
         </table>
       </form>
       <br />
-      <h4>{studentMessage}</h4>
+      <h4>{courseMessage}</h4>
       <br />
     </div>
   )
 }
 
-export default StudentTable
+export default CourseTable

@@ -10,7 +10,8 @@ function StudentCoursesTable() {
     'Capacity',
     'Credit',
     'Subject',
-    'Semester'
+    'Semester',
+    'Unenroll'
   ]
 
   const [semesterData, setSemesterData] = useState('')
@@ -18,7 +19,7 @@ function StudentCoursesTable() {
   const [courseError, setCourseError] = useState('')
 
   const siteCode = 'student'
-  const courseUrl = `http://localhost:8080/api/${siteCode}/${params.studentId}/course?semester=${semesterData}`
+  const [courseUrl, setCourseUrl] = useState(`http://localhost:8080/api/${siteCode}/${params.studentId}/course`)
 
   const [mainData, setMainData] = useState([])
 
@@ -34,29 +35,42 @@ function StudentCoursesTable() {
           console.log('api error', data)
           setCourseError(data.message)
         })
-
         return []
       })
       .then((data) => {
         console.log('data received: ', data)
         setMainData(data)
       })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [semesterData])
+  }, [semesterData, courseUrl])
+
+  useEffect(() => {
+    if (semesterData === '') {
+      setCourseUrl(`http://localhost:8080/api/${siteCode}/${params.studentId}/course`)
+    } else {
+      setCourseUrl(`http://localhost:8080/api/${siteCode}/${params.studentId}/course?semester=${semesterData}`)
+    }
+  }, [semesterData, params.studentId])
+
+  const unenrollFromCourse = ((rowData) => {
+    console.log('unenroll', rowData)
+    console.log('filter', mainData.filter((row) => (row.id !== rowData.id)))
+    const unenroll = { studentId: params.studentId, courseId: rowData.id }
+    fetch('http://localhost:8080/api/enroll', { method: 'DELETE', body: JSON.stringify(unenroll), headers: { 'Content-Type': 'application/json' } })
+      .then(() => setMainData(mainData.filter((row) => (row.id !== rowData.id))))
+  })
 
   return (
     <div>
-      <form>
-        <label>
-          Enter Semester:
-          <input
-            type="text"
-            value={semesterData}
-            onChange={(e) => setSemesterData(e.target.value)}
-          />
-        </label>
-        <h6 className="error">{courseError}</h6>
-      </form>
+      <label>
+        Enter Semester:
+        <input
+          type="text"
+          value={semesterData}
+          onChange={(e) => setSemesterData(e.target.value)}
+        />
+      </label>
+      <h6 className="error">{courseError}</h6>
+
       <table>
         <thead>
           <tr>
@@ -81,6 +95,11 @@ function StudentCoursesTable() {
                   {value}
                 </td>
               ))}
+              <td className="table-body" key={`${data.id}/delete`}>
+                <button type="button" onClick={() => { unenrollFromCourse(data) }}>
+                  Unenroll
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>

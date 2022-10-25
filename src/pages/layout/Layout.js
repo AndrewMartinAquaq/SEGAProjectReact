@@ -17,7 +17,21 @@ function Layout() {
           <li>
             <Link className="linkitem" to="/students">
               <div className="linkitem">
-                Student
+                Students
+              </div>
+            </Link>
+          </li>
+          <li>
+            <Link className="linkitem" to="/courses">
+              <div className="linkitem">
+                Courses
+              </div>
+            </Link>
+          </li>
+          <li>
+            <Link className="linkitem" to="/enroll">
+              <div className="linkitem">
+                Enroll
               </div>
             </Link>
           </li>

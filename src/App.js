@@ -5,6 +5,8 @@ import Layout from './pages/layout/Layout'
 import Home from './pages/home/Home'
 import NoPage from './pages/nopage/NoPage'
 import StudentRecord from './pages/studentRecord/StudentRecord'
+import Course from './pages/course/Course'
+import Enroll from './pages/enroll/Enroll'
 import './App.scss'
 
 function App() {
@@ -15,6 +17,8 @@ function App() {
           <Route index element={<Home />} />
           <Route path="students" element={<Student />} />
           <Route path="students/:studentId" element={<StudentRecord />} />
+          <Route path="courses" element={<Course />} />
+          <Route path="enroll" element={<Enroll />} />
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>
