@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Header from '../header/header'
+import Error from '../error/Error'
 
 function EnrollTable() {
   const selectFields = ['Select Student', 'Select Course']
@@ -110,6 +111,7 @@ function EnrollTable() {
   return (
     <div>
       <Header header="Enroll Table - " />
+      <Error error={enrollError} setError={setEnrollError} />
       <table>
         <thead>
           <tr>
@@ -154,7 +156,6 @@ function EnrollTable() {
       <br />
       <button type="button" onClick={handelEnrollSubmit}> Enroll Student</button>
       <br />
-      <h5 className="error">{enrollError}</h5>
       <h5 className="success">{enrollSuccess}</h5>
       <table>
         <thead>

@@ -1,0 +1,16 @@
+@import '../../utils/colours.scss';
+
+.error{
+    color: rgb(255, 15, 15);
+    position: fixed;
+    
+    border-style: solid;
+    border-color: black;
+    background-color: $brand-bg;
+    border: 4px;
+    padding: 5px;
+    width: 33%;
+    top: 1em;
+    left: 20em;
+    border-style: outset;
+  }

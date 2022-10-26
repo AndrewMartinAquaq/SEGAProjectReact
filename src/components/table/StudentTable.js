@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import Error from '../error/Error'
 import './StudentTable.scss'
 
 function StudentTable() {
@@ -85,7 +86,7 @@ function StudentTable() {
             rowToUpdate[field] = value
           } else {
             rowToUpdate[field] = `${valuePrev} `
-            response.json().then((data) => { console.log('put error', data) })
+            response.json().then((data) => { setStudentError(data.message) })
             console.log('pre value', valuePrev)
           }
         })
@@ -129,6 +130,8 @@ function StudentTable() {
             }
             setMainData(() => [...mainData, student])
           })
+        } else {
+          response.json().then((data) => setStudentError(data.message))
         }
       })
   }
@@ -141,6 +144,9 @@ function StudentTable() {
 
   return (
     <div>
+      <label>
+        {' Filter Type: '}
+      </label>
       <select
         value={state.selectedOption}
         onChange={handleSelectChange}
@@ -148,15 +154,12 @@ function StudentTable() {
         {options.map(({ value, label }) => <option key={value} value={value}>{label}</option>)}
       </select>
       <label hidden={hideFilter}>
-        {' '}
-        Filter by
-        {' '}
-        {state.selectedOption}
-        {' '}
+        {` Filter by ${state.selectedOption}: `}
       </label>
       <input type="text" value={searchData} onChange={(e) => setSearchData(e.target.value)} hidden={hideFilter} />
       <br />
-      <h4 className="error">{studentError}</h4>
+      <Error error={studentError} setError={setStudentError} />
+      <br />
       <form onSubmit={handleSubmit}>
         <table>
           <thead>

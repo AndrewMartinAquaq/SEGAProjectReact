@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import Error from '../error/Error'
 import './StudentTable.scss'
 
 function CourseTable() {
@@ -22,6 +23,7 @@ function CourseTable() {
   const [mainData, setMainData] = useState([])
   const [editingRow, setEditingRow] = useState()
   const [courseMessage, setCourseMessage] = useState('')
+  const [courseError, setCourseError] = useState('')
 
   useEffect(() => {
     if (searchData === '') {
@@ -62,7 +64,7 @@ function CourseTable() {
             rowToUpdate[field] = value
           } else {
             rowToUpdate[field] = `${valuePrev} `
-            response.json().then((data) => { console.log('put error', data) })
+            response.json().then((data) => { setCourseError(data.message) })
             console.log('pre value', valuePrev)
           }
         })
@@ -111,14 +113,17 @@ function CourseTable() {
             }
             setMainData(() => [...mainData, course])
           })
+        } else {
+          response.json().then((data) => setCourseError(data.message))
         }
       })
   }
 
   return (
     <div>
+      <Error error={courseError} setError={setCourseError} />
       <label>
-        Filter by Subject:
+        {' Filter by Subject: '}
         <input
           type="text"
           value={searchData}

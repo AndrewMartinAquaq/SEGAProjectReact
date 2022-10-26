@@ -1,7 +1,8 @@
+import { func } from 'prop-types'
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
-function StudentCoursesTable() {
+function StudentCoursesTable(props) {
   const params = useParams()
 
   const headerCols = [
@@ -16,7 +17,7 @@ function StudentCoursesTable() {
 
   const [semesterData, setSemesterData] = useState('')
 
-  const [courseError, setCourseError] = useState('')
+  const { setCourseError } = props
 
   const siteCode = 'student'
   const [courseUrl, setCourseUrl] = useState(`http://localhost:8080/api/${siteCode}/${params.studentId}/course`)
@@ -41,7 +42,7 @@ function StudentCoursesTable() {
         console.log('data received: ', data)
         setMainData(data)
       })
-  }, [semesterData, courseUrl])
+  }, [semesterData, courseUrl, setCourseError])
 
   useEffect(() => {
     if (semesterData === '') {
@@ -62,15 +63,15 @@ function StudentCoursesTable() {
   return (
     <div>
       <label>
-        Enter Semester:
+        {' Filter by Semester: '}
         <input
           type="text"
           value={semesterData}
           onChange={(e) => setSemesterData(e.target.value)}
         />
       </label>
-      <h6 className="error">{courseError}</h6>
-
+      <br />
+      <br />
       <table>
         <thead>
           <tr>
@@ -109,3 +110,11 @@ function StudentCoursesTable() {
 }
 
 export default StudentCoursesTable
+
+StudentCoursesTable.propTypes = {
+  setCourseError: func
+}
+
+StudentCoursesTable.defaultProps = {
+  setCourseError: () => {}
+}

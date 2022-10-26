@@ -1,9 +1,12 @@
+import { func } from 'prop-types'
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Header from '../header/header'
 
-function StudentRecordTable() {
+function StudentRecordTable(props) {
   const params = useParams()
+
+  const { setStudentError } = props
 
   const navigate = useNavigate()
 
@@ -37,7 +40,7 @@ function StudentRecordTable() {
             rowToUpdate[field] = value
           } else {
             rowToUpdate[field] = `${valuePrev} `
-            response.json().then((data) => { console.log('put error', data) })
+            response.json().then((data) => { setStudentError(data.message) })
             console.log('pre value', valuePrev)
           }
         })
@@ -78,7 +81,7 @@ function StudentRecordTable() {
         <thead>
           <tr>
             {headerCols.map((col) => (
-              <td className="table-head">
+              <td className="table-head" key={col}>
                 {col}
               </td>
             ))}
@@ -96,6 +99,7 @@ function StudentRecordTable() {
                 onBlur={(event) => {
                   updateRow(event.target.innerHTML, mainData, prop)
                 }}
+                key={`${mainData.id}/${prop}`}
               >
                 {value}
               </td>
@@ -120,3 +124,11 @@ function StudentRecordTable() {
 }
 
 export default StudentRecordTable
+
+StudentRecordTable.propTypes = {
+  setStudentError: func
+}
+
+StudentRecordTable.defaultProps = {
+  setStudentError: () => {}
+}
