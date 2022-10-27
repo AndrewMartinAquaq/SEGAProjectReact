@@ -1,40 +1,42 @@
-import { Outlet, Link } from 'react-router-dom'
+import { Outlet, Link, useLocation } from 'react-router-dom'
 import React from 'react'
 import './Layout.scss'
 
 function Layout() {
+  const location = useLocation()
+
+  const links = [
+    { name: 'Home', link: '/' },
+    { name: 'Students', link: '/students' },
+    { name: 'Courses', link: '/courses' },
+    { name: 'Enroll', link: '/enroll' }
+  ]
+
+  const checkLink = (link) => {
+    if (link === location.pathname) {
+      return 'selected'
+    }
+
+    const regex = /^\/students\/\d*$/g
+    if (regex.test(location.pathname) && link === '/students') {
+      return 'selected'
+    }
+    return 'linkitem'
+  }
+
   return (
     <>
       <nav className="topNav">
         <ul>
-          <li>
-            <Link className="linkitem" to="/">
-              <div className="linkitem">
-                Home
-              </div>
-            </Link>
-          </li>
-          <li>
-            <Link className="linkitem" to="/students">
-              <div className="linkitem">
-                Students
-              </div>
-            </Link>
-          </li>
-          <li>
-            <Link className="linkitem" to="/courses">
-              <div className="linkitem">
-                Courses
-              </div>
-            </Link>
-          </li>
-          <li>
-            <Link className="linkitem" to="/enroll">
-              <div className="linkitem">
-                Enroll
-              </div>
-            </Link>
-          </li>
+          {links.map((data) => (
+            <li key={data.name}>
+              <Link className="linkitem" to={data.link}>
+                <div className={checkLink(data.link)}>
+                  {data.name}
+                </div>
+              </Link>
+            </li>
+          ))}
         </ul>
       </nav>
 
