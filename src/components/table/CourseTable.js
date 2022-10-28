@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useState, useEffect } from 'react'
 import Error from '../error/Error'
 import './StudentTable.scss'

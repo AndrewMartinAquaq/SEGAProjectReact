@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useState, useEffect } from 'react'
 import Header from '../header/header'
 import Error from '../error/Error'

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Error from '../error/Error'
