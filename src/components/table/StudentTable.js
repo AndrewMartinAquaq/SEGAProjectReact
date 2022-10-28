@@ -124,7 +124,7 @@ function StudentTable() {
         if (response.ok) {
           response.json().then((data) => {
             console.log('data received: ', data)
-            const newId = parseInt(data.Link.charAt(data.Link.length - 1), 10)
+            const newId = parseInt(data.Link.substring(data.Link.indexOf('t/') + 2, data.Link.length), 10)
             const student = {
               id: newId, firstName: inputs.firstName, lastName: inputs.lastName, graduationDate: inputs.graduationDate
             }
@@ -238,7 +238,7 @@ function StudentTable() {
                 />
               </td>
               <td className="table-body">
-                <input type="submit" />
+                <button type="submit">Submit</button>
               </td>
             </tr>
           </tbody>

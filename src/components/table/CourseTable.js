@@ -14,7 +14,11 @@ function CourseTable() {
     'Delete'
   ]
 
-  // const mainData = []
+  const options = [
+    { value: 'none', label: 'None' },
+    { value: 'name', label: 'Name' },
+    { value: 'subject', label: 'Subject' }
+  ]
 
   const siteCode = 'course'
   const [courseUrl, setCourseUrl] = useState(`http://localhost:8080/api/${siteCode}`)
@@ -24,18 +28,39 @@ function CourseTable() {
   const [editingRow, setEditingRow] = useState()
   const [courseMessage, setCourseMessage] = useState('')
   const [courseError, setCourseError] = useState('')
+  const [hideFilter, setHideFilter] = useState(true)
+
+  const [state, setState] = useState({
+    selectedOption: 'none'
+  })
 
   useEffect(() => {
-    if (searchData === '') {
+    if (state.selectedOption === 'none') {
       setCourseUrl(`http://localhost:8080/api/${siteCode}`)
-    } else {
-      setCourseUrl(`http://localhost:8080/api/${siteCode}?subject=${searchData}`)
+      setHideFilter(true)
+    } else if (state.selectedOption === 'subject') {
+      if (searchData === '') {
+        setCourseUrl(`http://localhost:8080/api/${siteCode}`)
+        setHideFilter(false)
+      } else {
+        setCourseUrl(`http://localhost:8080/api/${siteCode}?subject=${searchData}`)
+        setHideFilter(false)
+      }
+    } else if (state.selectedOption === 'name') {
+      setCourseUrl(`http://localhost:8080/api/${siteCode}/name?name=${searchData}`)
+      setHideFilter(false)
     }
-  }, [searchData])
+  }, [searchData, state])
 
   useEffect(() => {
     fetch(courseUrl)
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+        }
+        response.json().then((error) => setCourseError(error.message))
+        return []
+      })
       .then((data) => {
         console.log('data received: ', data)
         setMainData(data)
@@ -94,6 +119,12 @@ function CourseTable() {
     }
   }
 
+  const handleSelectChange = ({ target }) => {
+    setState({
+      selectedOption: target.value
+    })
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault()
     console.log('form data', inputs)
@@ -102,7 +133,7 @@ function CourseTable() {
         if (response.ok) {
           response.json().then((data) => {
             console.log('data received: ', data)
-            const newId = parseInt(data.Link.charAt(data.Link.length - 1), 10)
+            const newId = parseInt(data.Link.substring(data.Link.indexOf('e/') + 2, data.Link.length), 10)
             const course = {
               id: newId,
               courseName: inputs.courseName,
@@ -123,13 +154,23 @@ function CourseTable() {
     <div>
       <Error error={courseError} setError={setCourseError} />
       <label>
-        {' Filter by Subject: '}
-        <input
-          type="text"
-          value={searchData}
-          onChange={(e) => setSearchData(e.target.value)}
-        />
+        {' Filter Type: '}
       </label>
+      <select
+        value={state.selectedOption}
+        onChange={handleSelectChange}
+      >
+        {options.map(({ value, label }) => <option key={value} value={value}>{label}</option>)}
+      </select>
+      <label hidden={hideFilter}>
+        {` Filter by ${state.selectedOption}: `}
+      </label>
+      <input
+        hidden={hideFilter}
+        type="text"
+        value={searchData}
+        onChange={(e) => setSearchData(e.target.value)}
+      />
       <br />
       <br />
       <form onSubmit={handleSubmit}>
@@ -221,7 +262,7 @@ function CourseTable() {
                 />
               </td>
               <td className="table-body">
-                <input type="submit" />
+                <button type="submit">Submit</button>
               </td>
             </tr>
           </tbody>

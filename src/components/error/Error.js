@@ -18,7 +18,7 @@ function Error(props) {
   return (
     <div className="error" hidden={hideError}>
       <h4>{error}</h4>
-      <button type="button" onClick={() => { setError('') }}>Dismiss</button>
+      <button type="button" style={{ width: 'auto' }} onClick={() => { setError('') }}>Dismiss</button>
     </div>
   )
 }

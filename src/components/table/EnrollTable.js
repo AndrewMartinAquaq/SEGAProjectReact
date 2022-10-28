@@ -51,10 +51,17 @@ function EnrollTable() {
       .then((data) => {
         console.log('data received: ', data)
         setStudentData(data)
-        setStudentEntry(data[0])
-        setStudentState({
-          selectedOption: data[0].id
-        })
+        if (data.length === 0) {
+          setStudentEntry({})
+          setStudentState({
+            selectedOption: 0
+          })
+        } else {
+          setStudentEntry(data[0])
+          setStudentState({
+            selectedOption: data[0].id
+          })
+        }
       })
   }, [studentUrl])
 
@@ -64,10 +71,17 @@ function EnrollTable() {
       .then((data) => {
         console.log('data received: ', data)
         setCourseData(data)
-        setCourseEntry(data[0])
-        setCourseState({
-          selectedOption: data[0].id
-        })
+        if (data.length === 0) {
+          setCourseEntry({})
+          setCourseState({
+            selectedOption: 0
+          })
+        } else {
+          setCourseEntry(data[0])
+          setCourseState({
+            selectedOption: data[0].id
+          })
+        }
       })
   }, [courseUrl])
 
@@ -154,7 +168,7 @@ function EnrollTable() {
         </tbody>
       </table>
       <br />
-      <button type="button" onClick={handelEnrollSubmit}> Enroll Student</button>
+      <button type="button" style={{ width: 'auto' }} onClick={handelEnrollSubmit}> Enroll Student</button>
       <br />
       <h5 className="success">{enrollSuccess}</h5>
       <table>
@@ -168,7 +182,7 @@ function EnrollTable() {
           </tr>
         </thead>
         <tbody>
-          <tr key={studentEntry.id}>
+          <tr key={studentEntry}>
             {Object.entries(studentEntry).map(([prop, value]) => (
               <td
                 className="table-body"
@@ -193,7 +207,7 @@ function EnrollTable() {
           </tr>
         </thead>
         <tbody>
-          <tr key={courseEntry.id}>
+          <tr key={courseEntry}>
             {Object.entries(courseEntry).map(([prop, value]) => (
               <td
                 className="table-body"
