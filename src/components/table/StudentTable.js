@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Error from '../error/Error'
+import Warn from '../warn/Warn'
 import './StudentTable.scss'
 
 function StudentTable() {
@@ -27,6 +28,9 @@ function StudentTable() {
   const [editingRow, setEditingRow] = useState()
   const [studentMessage, setStudentMessage] = useState('')
   const [studentError, setStudentError] = useState('')
+
+  const [rowToDelete, setRowToDelete] = useState({ id: 0 })
+  const deleteMessage = 'Are you sure you want to delete this student?'
 
   const [hideFilter, setHideFilter] = useState(true)
 
@@ -145,6 +149,10 @@ function StudentTable() {
 
   return (
     <div>
+      <div>
+        <Error error={studentError} setError={setStudentError} />
+        <Warn message={deleteMessage} onWarn={() => removeRow(rowToDelete)} toUpdate={rowToDelete} setToUpdate={setRowToDelete} />
+      </div>
       <label>
         {' Filter Type: '}
       </label>
@@ -159,7 +167,6 @@ function StudentTable() {
       </label>
       <input type="text" value={searchData} onChange={(e) => setSearchData(e.target.value)} hidden={hideFilter} />
       <br />
-      <Error error={studentError} setError={setStudentError} />
       <br />
       <form onSubmit={handleSubmit}>
         <table>
@@ -196,7 +203,7 @@ function StudentTable() {
                   </button>
                 </td>
                 <td className="table-body" key={`${data.id}/delete`}>
-                  <button type="button" onClick={() => { removeRow(data) }}>
+                  <button type="button" onClick={() => { setRowToDelete(data); setStudentError('') }}>
                     Delete Row
                   </button>
                 </td>

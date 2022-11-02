@@ -145,7 +145,7 @@ function EnrollTable() {
                 onChange={handleStudentChange}
               >
                 {studentData.map((data) => (
-                  <option value={data.id}>
+                  <option value={data.id} key={data.id}>
                     {data.firstName}
                     {' '}
                     {data.lastName}
@@ -159,7 +159,7 @@ function EnrollTable() {
                 onChange={handleCourseChange}
               >
                 {courseData.map((data) => (
-                  <option value={data.id}>
+                  <option value={data.id} key={data.id}>
                     {data.courseName}
                   </option>
                 ))}
@@ -176,7 +176,7 @@ function EnrollTable() {
         <thead>
           <tr>
             {studentHeaderCols.map((col) => (
-              <td className="table-head">
+              <td className="table-head" key={col}>
                 {col}
               </td>
             ))}
@@ -186,6 +186,7 @@ function EnrollTable() {
           <tr key={studentEntry}>
             {Object.entries(studentEntry).map(([prop, value]) => (
               <td
+                key={prop}
                 className="table-body"
                 name={prop}
                 // eslint-disable-next-line react/no-unknown-property
@@ -201,7 +202,7 @@ function EnrollTable() {
         <thead>
           <tr>
             {courseHeaderCols.map((col) => (
-              <td className="table-head">
+              <td className="table-head" key={col}>
                 {col}
               </td>
             ))}
@@ -211,6 +212,7 @@ function EnrollTable() {
           <tr key={courseEntry}>
             {Object.entries(courseEntry).map(([prop, value]) => (
               <td
+                key={prop}
                 className="table-body"
                 name={prop}
                 // eslint-disable-next-line react/no-unknown-property

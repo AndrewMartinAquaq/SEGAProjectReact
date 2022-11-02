@@ -7,7 +7,9 @@ import Header from '../header/header'
 function StudentRecordTable(props) {
   const params = useParams()
 
-  const { setStudentError } = props
+  const {
+    setStudentError, setDeleteMessage, setDeleteRow, setRowToDelete
+  } = props
 
   const navigate = useNavigate()
 
@@ -59,6 +61,12 @@ function StudentRecordTable(props) {
   const removeRow = (() => fetch(studentUrl, { method: 'DELETE' }).then(() => navigate('/students'))
   )
 
+  const onRemoveRow = (() => {
+    setDeleteMessage('Are you sure you want to delete this student?')
+    setRowToDelete({ id: mainData.id })
+    setDeleteRow(() => removeRow)
+  })
+
   useEffect(() => {
     if (mainData.id == null) {
       fetch(studentUrl)
@@ -94,7 +102,7 @@ function StudentRecordTable(props) {
               <td
                 className="table-body"
                 name={prop}
-                contentEditable={mainData.id === editingRow}
+                contentEditable={mainData.id === editingRow && prop !== 'id'}
                 // eslint-disable-next-line react/no-unknown-property
                 field={prop}
                 onBlur={(event) => {
@@ -111,7 +119,7 @@ function StudentRecordTable(props) {
               </button>
             </td>
             <td className="table-body">
-              <button type="button" onClick={() => { removeRow() }}>
+              <button type="button" onClick={() => { onRemoveRow() }}>
                 Delete Row
               </button>
             </td>
@@ -127,9 +135,15 @@ function StudentRecordTable(props) {
 export default StudentRecordTable
 
 StudentRecordTable.propTypes = {
-  setStudentError: func
+  setStudentError: func,
+  setDeleteMessage: func,
+  setDeleteRow: func,
+  setRowToDelete: func
 }
 
 StudentRecordTable.defaultProps = {
-  setStudentError: () => {}
+  setStudentError: () => {},
+  setDeleteMessage: () => {},
+  setDeleteRow: () => {},
+  setRowToDelete: () => {}
 }

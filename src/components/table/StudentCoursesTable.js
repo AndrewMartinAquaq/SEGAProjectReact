@@ -6,6 +6,10 @@ import { useParams } from 'react-router-dom'
 function StudentCoursesTable(props) {
   const params = useParams()
 
+  const {
+    setCourseError, setDeleteMessage, setDeleteRow, setRowToDelete
+  } = props
+
   const headerCols = [
     'Id',
     'Course Name',
@@ -17,8 +21,6 @@ function StudentCoursesTable(props) {
   ]
 
   const [semesterData, setSemesterData] = useState('')
-
-  const { setCourseError } = props
 
   const siteCode = 'student'
   const [courseUrl, setCourseUrl] = useState(`http://localhost:8080/api/${siteCode}/${params.studentId}/course`)
@@ -61,6 +63,12 @@ function StudentCoursesTable(props) {
       .then(() => setMainData(mainData.filter((row) => (row.id !== rowData.id))))
   })
 
+  const onUnenroll = ((rowData) => {
+    setDeleteMessage(`Are you sure you want to unenroll this student from ${rowData.courseName}`)
+    setRowToDelete({ id: rowData.id })
+    setDeleteRow(() => unenrollFromCourse)
+  })
+
   return (
     <div>
       <label>
@@ -98,7 +106,7 @@ function StudentCoursesTable(props) {
                 </td>
               ))}
               <td className="table-body" key={`${data.id}/delete`}>
-                <button type="button" onClick={() => { unenrollFromCourse(data) }}>
+                <button type="button" onClick={() => { onUnenroll(data) }}>
                   Unenroll
                 </button>
               </td>
@@ -113,9 +121,15 @@ function StudentCoursesTable(props) {
 export default StudentCoursesTable
 
 StudentCoursesTable.propTypes = {
-  setCourseError: func
+  setCourseError: func,
+  setDeleteMessage: func,
+  setDeleteRow: func,
+  setRowToDelete: func
 }
 
 StudentCoursesTable.defaultProps = {
-  setCourseError: () => {}
+  setCourseError: () => {},
+  setDeleteMessage: () => {},
+  setDeleteRow: () => {},
+  setRowToDelete: () => {}
 }

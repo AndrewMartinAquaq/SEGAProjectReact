@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import React, { useState, useEffect } from 'react'
 import Error from '../error/Error'
+import Warn from '../warn/Warn'
 import './StudentTable.scss'
 
 function CourseTable() {
@@ -30,6 +31,9 @@ function CourseTable() {
   const [courseMessage, setCourseMessage] = useState('')
   const [courseError, setCourseError] = useState('')
   const [hideFilter, setHideFilter] = useState(true)
+
+  const [rowToDelete, setRowToDelete] = useState({ id: 0 })
+  const deleteMessage = 'Are you sure you want to delete this course?'
 
   const [state, setState] = useState({
     selectedOption: 'none'
@@ -154,6 +158,7 @@ function CourseTable() {
   return (
     <div>
       <Error error={courseError} setError={setCourseError} />
+      <Warn message={deleteMessage} onWarn={() => removeRow(rowToDelete)} toUpdate={rowToDelete} setToUpdate={setRowToDelete} />
       <label>
         {' Filter Type: '}
       </label>
@@ -209,7 +214,7 @@ function CourseTable() {
                   </button>
                 </td>
                 <td className="table-body" key={`${data.id}/delete`}>
-                  <button type="button" onClick={() => { removeRow(data) }}>
+                  <button type="button" onClick={() => { setRowToDelete(data); setCourseMessage('') }}>
                     Delete Row
                   </button>
                 </td>
