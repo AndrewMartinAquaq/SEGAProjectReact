@@ -62,7 +62,7 @@ function StudentRecordTable(props) {
   )
 
   const onRemoveRow = (() => {
-    setDeleteMessage('Are you sure you want to delete this student?')
+    setDeleteMessage(`Are you sure you want to delete student at Id ${mainData.id}?`)
     setRowToDelete({ id: mainData.id })
     setDeleteRow(() => removeRow)
   })

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Error from '../error/Error'
 import Warn from '../warn/Warn'
-import './StudentTable.scss'
+import './Table.scss'
 
 function StudentTable() {
   const headerCols = [
@@ -12,7 +12,8 @@ function StudentTable() {
     'Last Name',
     'Gradutation Year',
     'Edit',
-    'Delete'
+    'Delete',
+    'Go to'
   ]
 
   const options = [
@@ -30,7 +31,7 @@ function StudentTable() {
   const [studentError, setStudentError] = useState('')
 
   const [rowToDelete, setRowToDelete] = useState({ id: 0 })
-  const deleteMessage = 'Are you sure you want to delete this student?'
+  const [deleteMessage, setDeleteMessage] = useState('Are you sure you want to delete this student?')
 
   const [hideFilter, setHideFilter] = useState(true)
 
@@ -203,7 +204,14 @@ function StudentTable() {
                   </button>
                 </td>
                 <td className="table-body" key={`${data.id}/delete`}>
-                  <button type="button" onClick={() => { setRowToDelete(data); setStudentError('') }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRowToDelete(data)
+                      setStudentError('')
+                      setDeleteMessage(`Are you sure you want to delete student at Id ${data.id}?`)
+                    }}
+                  >
                     Delete Row
                   </button>
                 </td>

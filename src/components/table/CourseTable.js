@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import Error from '../error/Error'
 import Warn from '../warn/Warn'
-import './StudentTable.scss'
+import './Table.scss'
 
 function CourseTable() {
   const headerCols = [
@@ -33,7 +33,7 @@ function CourseTable() {
   const [hideFilter, setHideFilter] = useState(true)
 
   const [rowToDelete, setRowToDelete] = useState({ id: 0 })
-  const deleteMessage = 'Are you sure you want to delete this course?'
+  const [deleteMessage, setDeleteMessage] = useState('Are you sure you want to delete this course?')
 
   const [state, setState] = useState({
     selectedOption: 'none'
@@ -214,7 +214,14 @@ function CourseTable() {
                   </button>
                 </td>
                 <td className="table-body" key={`${data.id}/delete`}>
-                  <button type="button" onClick={() => { setRowToDelete(data); setCourseMessage('') }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRowToDelete(data)
+                      setCourseError('')
+                      setDeleteMessage(`Are you sure you want to delete course at Id ${data.id}?`)
+                    }}
+                  >
                     Delete Row
                   </button>
                 </td>
