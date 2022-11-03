@@ -37,6 +37,10 @@ function Layout() {
               </Link>
             </li>
           ))}
+          <li className="title">
+            <img className="logo" src="nav-logo.png" alt="logo on the nav bar" />
+            <div className="text">Student Enrollment</div>
+          </li>
         </ul>
       </nav>
 

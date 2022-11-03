@@ -1,6 +1,6 @@
 {
-    "name": "",
-    "short_name": "",
+    "name": "Student Enrollment",
+    "short_name": "Enroll",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
