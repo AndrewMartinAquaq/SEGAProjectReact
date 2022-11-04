@@ -35,6 +35,9 @@ function StudentTable() {
 
   const [hideFilter, setHideFilter] = useState(true)
 
+  const [hideForm, setHideForm] = useState(true)
+  const [formButton, setFromButton] = useState('Add New Student')
+
   const [state, setState] = useState({
     selectedOption: 'none'
   })
@@ -122,6 +125,23 @@ function StudentTable() {
     }
   }
 
+  const handelEditBorder = (dataId, prop) => {
+    if (dataId === editingRow && prop !== 'id') {
+      return 'table-body-edit'
+    }
+    return 'table-body'
+  }
+
+  const handelHideForm = () => {
+    if (hideForm) {
+      setHideForm(false)
+      setFromButton('Cancel')
+    } else {
+      setHideForm(true)
+      setFromButton('Add New Student')
+    }
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault()
     console.log('form data', inputs)
@@ -135,6 +155,8 @@ function StudentTable() {
               id: newId, firstName: inputs.firstName, lastName: inputs.lastName, graduationDate: inputs.graduationDate
             }
             setMainData(() => [...mainData, student])
+            setInputs({})
+            handelHideForm()
           })
         } else {
           response.json().then((data) => setStudentError(data.message))
@@ -186,7 +208,7 @@ function StudentTable() {
                 {Object.entries(data).map(([prop, value]) => (
                   <td
                     key={`${data.id}/${prop}`}
-                    className="table-body"
+                    className={handelEditBorder(data.id, prop)}
                     name={prop}
                     contentEditable={(data.id === editingRow) && (prop !== 'id')}
                 // eslint-disable-next-line react/no-unknown-property
@@ -222,7 +244,7 @@ function StudentTable() {
                 </td>
               </tr>
             ))}
-            <tr>
+            <tr hidden={hideForm}>
               <td className="table-body">
                 #
               </td>
@@ -260,6 +282,8 @@ function StudentTable() {
           </tbody>
         </table>
       </form>
+      <br />
+      <button type="button" onClick={() => handelHideForm()} style={{ width: 'fit-content' }}>{formButton}</button>
       <br />
       <h4>{studentMessage}</h4>
       <br />

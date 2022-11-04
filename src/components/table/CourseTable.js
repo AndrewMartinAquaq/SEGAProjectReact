@@ -35,6 +35,9 @@ function CourseTable() {
   const [rowToDelete, setRowToDelete] = useState({ id: 0 })
   const [deleteMessage, setDeleteMessage] = useState('Are you sure you want to delete this course?')
 
+  const [hideForm, setHideForm] = useState(true)
+  const [formButton, setFromButton] = useState('Add New Course')
+
   const [state, setState] = useState({
     selectedOption: 'none'
   })
@@ -124,10 +127,27 @@ function CourseTable() {
     }
   }
 
+  const handelEditBorder = (dataId, prop) => {
+    if (dataId === editingRow && prop !== 'id') {
+      return 'table-body-edit'
+    }
+    return 'table-body'
+  }
+
   const handleSelectChange = ({ target }) => {
     setState({
       selectedOption: target.value
     })
+  }
+
+  const handelHideForm = () => {
+    if (hideForm) {
+      setHideForm(false)
+      setFromButton('Cancel')
+    } else {
+      setHideForm(true)
+      setFromButton('Add New Course')
+    }
   }
 
   const handleSubmit = (event) => {
@@ -148,6 +168,8 @@ function CourseTable() {
               semester: inputs.semester
             }
             setMainData(() => [...mainData, course])
+            setInputs({})
+            handelHideForm()
           })
         } else {
           response.json().then((data) => setCourseError(data.message))
@@ -196,7 +218,7 @@ function CourseTable() {
                 {Object.entries(data).map(([prop, value]) => (
                   <td
                     key={`${data.id}/${prop}`}
-                    className="table-body"
+                    className={handelEditBorder(data.id, prop)}
                     name={prop}
                     contentEditable={(data.id === editingRow) && (prop !== 'id')}
                 // eslint-disable-next-line react/no-unknown-property
@@ -227,7 +249,7 @@ function CourseTable() {
                 </td>
               </tr>
             ))}
-            <tr>
+            <tr hidden={hideForm}>
               <td className="table-body">
                 #
               </td>
@@ -281,6 +303,8 @@ function CourseTable() {
           </tbody>
         </table>
       </form>
+      <br />
+      <button type="button" onClick={() => handelHideForm()} style={{ width: 'fit-content' }}>{formButton}</button>
       <br />
       <h4>{courseMessage}</h4>
       <br />

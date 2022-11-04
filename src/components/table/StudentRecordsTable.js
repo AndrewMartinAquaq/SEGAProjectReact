@@ -58,6 +58,13 @@ function StudentRecordTable(props) {
     }
   }
 
+  const handelEditBorder = (dataId, prop) => {
+    if (dataId === editingRow && prop !== 'id') {
+      return 'table-body-edit'
+    }
+    return 'table-body'
+  }
+
   const removeRow = (() => fetch(studentUrl, { method: 'DELETE' }).then(() => navigate('/students'))
   )
 
@@ -100,7 +107,7 @@ function StudentRecordTable(props) {
           <tr key={mainData.id}>
             {Object.entries(mainData).map(([prop, value]) => (
               <td
-                className="table-body"
+                className={handelEditBorder(mainData.id, prop)}
                 name={prop}
                 contentEditable={mainData.id === editingRow && prop !== 'id'}
                 // eslint-disable-next-line react/no-unknown-property

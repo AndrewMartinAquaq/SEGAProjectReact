@@ -19,6 +19,12 @@ thead {
   }
   &-body{
     border-style: outset;
+    &-edit{
+      border-style: outset;
+      background-color: $brand-bg-highlight;
+      border-color: $brand-bd-highlight;
+      
+    }
   }
 }
 
