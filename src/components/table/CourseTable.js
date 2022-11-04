@@ -147,6 +147,7 @@ function CourseTable() {
     } else {
       setHideForm(true)
       setFromButton('Add New Course')
+      setInputs({})
     }
   }
 
@@ -168,7 +169,6 @@ function CourseTable() {
               semester: inputs.semester
             }
             setMainData(() => [...mainData, course])
-            setInputs({})
             handelHideForm()
           })
         } else {

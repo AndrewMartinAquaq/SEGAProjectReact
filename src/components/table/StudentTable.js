@@ -139,6 +139,7 @@ function StudentTable() {
     } else {
       setHideForm(true)
       setFromButton('Add New Student')
+      setInputs({})
     }
   }
 
@@ -155,7 +156,6 @@ function StudentTable() {
               id: newId, firstName: inputs.firstName, lastName: inputs.lastName, graduationDate: inputs.graduationDate
             }
             setMainData(() => [...mainData, student])
-            setInputs({})
             handelHideForm()
           })
         } else {
