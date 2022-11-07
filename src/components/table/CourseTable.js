@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { useState, useEffect } from 'react'
 import Error from '../error/Error'
 import Warn from '../warn/Warn'
@@ -81,7 +80,6 @@ function CourseTable() {
         return []
       })
       .then((data) => {
-        console.log('data received: ', data)
         setMainData(data)
       })
   }, [courseUrl, searchData])
@@ -96,8 +94,6 @@ function CourseTable() {
 
   const updateRow = (value, rowData, field) => {
     const rowToUpdate = mainData.filter((row) => (row.id === rowData.id))[0]
-    console.log('field: ', field)
-    console.log('rowToUpdate: ', rowToUpdate)
     const valuePrev = rowData[field]
     const course = rowData
     course[field] = value
@@ -110,15 +106,12 @@ function CourseTable() {
           } else {
             rowToUpdate[field] = `${valuePrev} `
             response.json().then((data) => { setCourseError(data.message) })
-            console.log('pre value', valuePrev)
           }
         })
     }
   }
 
   const removeRow = ((rowData) => {
-    console.log('remove row', rowData)
-    console.log('filter', mainData.filter((row) => (row.id !== rowData.id)))
     const deleteUrl = `http://localhost:8080/api/${siteCode}/${rowData.id}`
     fetch(deleteUrl, { method: 'DELETE' })
       .then(() => setMainData(mainData.filter((row) => (row.id !== rowData.id))))
@@ -166,12 +159,10 @@ function CourseTable() {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    console.log('form data', inputs)
     fetch(courseUrl, { method: 'POST', body: JSON.stringify(inputs), headers: { 'Content-Type': 'application/json' } })
       .then((response) => {
         if (response.ok) {
           response.json().then((data) => {
-            console.log('data received: ', data)
             const newId = parseInt(data.Link.substring(data.Link.indexOf('e/') + 2, data.Link.length), 10)
             const course = {
               id: newId,

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { func } from 'prop-types'
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
@@ -45,13 +44,11 @@ function StudentCoursesTable(props) {
         return []
       })
       .then((data) => {
-        console.log('data received: ', data)
         setMainData(data)
       })
   }, [semesterData, courseUrl, setCourseError])
 
   useEffect(() => {
-    console.log('data', semesterData)
     if (semesterData === '' || semesterData === null) {
       setCourseUrl(`http://localhost:8080/api/${siteCode}/${params.studentId}/course`)
     } else {
@@ -60,8 +57,6 @@ function StudentCoursesTable(props) {
   }, [semesterData, params.studentId])
 
   const unenrollFromCourse = ((rowData) => {
-    console.log('unenroll', rowData)
-    console.log('filter', mainData.filter((row) => (row.id !== rowData.id)))
     const unenroll = { studentId: params.studentId, courseId: rowData.id }
     fetch('http://localhost:8080/api/enroll', { method: 'DELETE', body: JSON.stringify(unenroll), headers: { 'Content-Type': 'application/json' } })
       .then(() => setMainData(mainData.filter((row) => (row.id !== rowData.id))))

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Error from '../error/Error'
@@ -78,7 +77,6 @@ function StudentTable() {
         return []
       })
       .then((data) => {
-        console.log('data received: ', data)
         setMainData(data)
       })
   }, [studentUrl, searchData])
@@ -93,8 +91,6 @@ function StudentTable() {
 
   const updateRow = (value, rowData, field) => {
     const rowToUpdate = mainData.filter((row) => (row.id === rowData.id))[0]
-    console.log('field: ', field)
-    console.log('rowToUpdate: ', rowToUpdate)
     const valuePrev = rowData[field]
     const student = rowData
     student[field] = value
@@ -107,15 +103,12 @@ function StudentTable() {
           } else {
             rowToUpdate[field] = `${valuePrev} `
             response.json().then((data) => { setStudentError(data.message) })
-            console.log('pre value', valuePrev)
           }
         })
     }
   }
 
   const removeRow = ((rowData) => {
-    console.log('remove row', rowData)
-    console.log('filter', mainData.filter((row) => (row.id !== rowData.id)))
     const deleteUrl = `http://localhost:8080/api/${siteCode}/${rowData.id}`
     fetch(deleteUrl, { method: 'DELETE' })
       .then(() => setMainData(mainData.filter((row) => (row.id !== rowData.id))))
@@ -157,12 +150,10 @@ function StudentTable() {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    console.log('form data', inputs)
     fetch(studentUrl, { method: 'POST', body: JSON.stringify(inputs), headers: { 'Content-Type': 'application/json' } })
       .then((response) => {
         if (response.ok) {
           response.json().then((data) => {
-            console.log('data received: ', data)
             const newId = parseInt(data.Link.substring(data.Link.indexOf('t/') + 2, data.Link.length), 10)
             const student = {
               id: newId, firstName: inputs.firstName, lastName: inputs.lastName, graduationDate: inputs.graduationDate

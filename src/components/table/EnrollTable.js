@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { useState, useEffect } from 'react'
 import Header from '../header/header'
 import Error from '../error/Error'
@@ -50,7 +49,6 @@ function EnrollTable() {
     fetch(studentUrl)
       .then((response) => response.json())
       .then((data) => {
-        console.log('data received: ', data)
         setStudentData(data)
         if (data.length === 0) {
           setStudentEntry({})
@@ -70,7 +68,6 @@ function EnrollTable() {
     fetch(courseUrl)
       .then((response) => response.json())
       .then((data) => {
-        console.log('data received: ', data)
         setCourseData(data)
         if (data.length === 0) {
           setCourseEntry({})
@@ -112,7 +109,6 @@ function EnrollTable() {
       .then((response) => {
         if (!response.ok) {
           response.json().then((data) => {
-            console.log('error', data)
             setEnrollError(data.message)
             setEnrollSuccess('')
           })

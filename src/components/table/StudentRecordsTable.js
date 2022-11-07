@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { func } from 'prop-types'
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -31,8 +30,6 @@ function StudentRecordTable(props) {
 
   const updateRow = (value, rowData, field) => {
     const rowToUpdate = mainData
-    console.log('field: ', field)
-    console.log('rowToUpdate: ', rowToUpdate)
     const valuePrev = rowData[field]
     const student = rowData
     student[field] = value
@@ -44,7 +41,6 @@ function StudentRecordTable(props) {
           } else {
             rowToUpdate[field] = `${valuePrev} `
             response.json().then((data) => { setStudentError(data.message) })
-            console.log('pre value', valuePrev)
           }
         })
     }
@@ -84,7 +80,6 @@ function StudentRecordTable(props) {
           return response.json()
         })
         .then((data) => {
-          console.log('data received: ', data)
           setMainData(data)
         })
     }
