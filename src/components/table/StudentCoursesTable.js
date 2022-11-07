@@ -36,8 +36,11 @@ function StudentCoursesTable(props) {
           return json
         }
         json.then((data) => {
-          console.log('api error', data)
-          setCourseError(data.message)
+          if (semesterData === '') {
+            setCourseError('')
+          } else {
+            setCourseError(data.message)
+          }
         })
         return []
       })
@@ -48,7 +51,8 @@ function StudentCoursesTable(props) {
   }, [semesterData, courseUrl, setCourseError])
 
   useEffect(() => {
-    if (semesterData === '') {
+    console.log('data', semesterData)
+    if (semesterData === '' || semesterData === null) {
       setCourseUrl(`http://localhost:8080/api/${siteCode}/${params.studentId}/course`)
     } else {
       setCourseUrl(`http://localhost:8080/api/${siteCode}/${params.studentId}/course?semester=${semesterData}`)

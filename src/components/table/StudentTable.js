@@ -58,20 +58,30 @@ function StudentTable() {
   }, [state, searchData])
 
   useEffect(() => {
+    setSearchData('')
+  }, [state])
+
+  useEffect(() => {
     fetch(studentUrl)
       .then((response) => {
         if (response.ok) {
           setStudentError('')
           return response.json()
         }
-        response.json().then((error) => setStudentError(error.message))
+        response.json().then((error) => {
+          if (searchData === '') {
+            setStudentError('')
+          } else {
+            setStudentError(error.message)
+          }
+        })
         return []
       })
       .then((data) => {
         console.log('data received: ', data)
         setMainData(data)
       })
-  }, [studentUrl])
+  }, [studentUrl, searchData])
 
   useEffect(() => {
     if (mainData.length === 0) {
@@ -89,7 +99,8 @@ function StudentTable() {
     const student = rowData
     student[field] = value
     if (rowToUpdate[field] !== valuePrev) {
-      fetch(`${studentUrl}/${rowData.id}`, { method: 'PUT', body: JSON.stringify(student), headers: { 'Content-Type': 'application/json' } })
+      const editUrl = `http://localhost:8080/api/${siteCode}/${rowData.id}`
+      fetch(editUrl, { method: 'PUT', body: JSON.stringify(student), headers: { 'Content-Type': 'application/json' } })
         .then((response) => {
           if (response.ok) {
             rowToUpdate[field] = value
@@ -105,7 +116,8 @@ function StudentTable() {
   const removeRow = ((rowData) => {
     console.log('remove row', rowData)
     console.log('filter', mainData.filter((row) => (row.id !== rowData.id)))
-    fetch(`${studentUrl}/${rowData.id}`, { method: 'DELETE' })
+    const deleteUrl = `http://localhost:8080/api/${siteCode}/${rowData.id}`
+    fetch(deleteUrl, { method: 'DELETE' })
       .then(() => setMainData(mainData.filter((row) => (row.id !== rowData.id))))
   })
 

@@ -61,12 +61,23 @@ function CourseTable() {
   }, [searchData, state])
 
   useEffect(() => {
+    setSearchData('')
+  }, [state])
+
+  useEffect(() => {
     fetch(courseUrl)
       .then((response) => {
         if (response.ok) {
+          setCourseError('')
           return response.json()
         }
-        response.json().then((error) => setCourseError(error.message))
+        response.json().then((error) => {
+          if (searchData === '') {
+            setCourseError('')
+          } else {
+            setCourseError(error.message)
+          }
+        })
         return []
       })
       .then((data) => {
@@ -90,8 +101,9 @@ function CourseTable() {
     const valuePrev = rowData[field]
     const course = rowData
     course[field] = value
+    const editUrl = `http://localhost:8080/api/${siteCode}/${rowData.id}`
     if (rowToUpdate[field] !== valuePrev) {
-      fetch(`${courseUrl}/${rowData.id}`, { method: 'PUT', body: JSON.stringify(course), headers: { 'Content-Type': 'application/json' } })
+      fetch(editUrl, { method: 'PUT', body: JSON.stringify(course), headers: { 'Content-Type': 'application/json' } })
         .then((response) => {
           if (response.ok) {
             rowToUpdate[field] = value
@@ -107,7 +119,8 @@ function CourseTable() {
   const removeRow = ((rowData) => {
     console.log('remove row', rowData)
     console.log('filter', mainData.filter((row) => (row.id !== rowData.id)))
-    fetch(`${courseUrl}/${rowData.id}`, { method: 'DELETE' })
+    const deleteUrl = `http://localhost:8080/api/${siteCode}/${rowData.id}`
+    fetch(deleteUrl, { method: 'DELETE' })
       .then(() => setMainData(mainData.filter((row) => (row.id !== rowData.id))))
   })
 
