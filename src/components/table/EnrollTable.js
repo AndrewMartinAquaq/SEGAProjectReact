@@ -3,9 +3,9 @@ import Header from '../header/header'
 import Error from '../error/Error'
 
 function EnrollTable() {
-  const selectFields = ['Select Student', 'Select Course']
-
   const studentHeaderCols = [
+    'Select Student',
+    '',
     'Id',
     'First Name',
     'Last Name',
@@ -13,6 +13,8 @@ function EnrollTable() {
   ]
 
   const courseHeaderCols = [
+    'Select Course',
+    '',
     'Id',
     'Course Name',
     'Capacity',
@@ -119,6 +121,13 @@ function EnrollTable() {
       })
   }
 
+  const checkSpacer = (col) => {
+    if (col === '') {
+      return 'table-head-spacer'
+    }
+    return 'table-head'
+  }
+
   return (
     <div>
       <Header header="Enroll Table - " />
@@ -126,17 +135,18 @@ function EnrollTable() {
       <table>
         <thead>
           <tr>
-            {selectFields.map((col) => (
-              <td className="table-head" key={col}>
+            {studentHeaderCols.map((col) => (
+              <td className={checkSpacer(col)} key={col}>
                 {col}
               </td>
             ))}
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr key={studentEntry}>
             <td className="table-body">
               <select
+                className="dropdown"
                 value={studentState.selectedOption}
                 onChange={handleStudentChange}
               >
@@ -149,37 +159,7 @@ function EnrollTable() {
                 ))}
               </select>
             </td>
-            <td className="table-body">
-              <select
-                value={courseState.selectedOption}
-                onChange={handleCourseChange}
-              >
-                {courseData.map((data) => (
-                  <option value={data.id} key={data.id}>
-                    {data.courseName}
-                  </option>
-                ))}
-              </select>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <br />
-      <button type="button" style={{ width: 'auto' }} onClick={handelEnrollSubmit}> Enroll Student</button>
-      <br />
-      <h5 className="success">{enrollSuccess}</h5>
-      <table>
-        <thead>
-          <tr>
-            {studentHeaderCols.map((col) => (
-              <td className="table-head" key={col}>
-                {col}
-              </td>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          <tr key={studentEntry}>
+            <br />
             {Object.entries(studentEntry).map(([prop, value]) => (
               <td
                 key={prop}
@@ -194,11 +174,12 @@ function EnrollTable() {
           </tr>
         </tbody>
       </table>
+      <br />
       <table>
         <thead>
           <tr>
             {courseHeaderCols.map((col) => (
-              <td className="table-head" key={col}>
+              <td className={checkSpacer(col)} key={col}>
                 {col}
               </td>
             ))}
@@ -206,6 +187,20 @@ function EnrollTable() {
         </thead>
         <tbody>
           <tr key={courseEntry}>
+            <td className="table-body">
+              <select
+                className="dropdown"
+                value={courseState.selectedOption}
+                onChange={handleCourseChange}
+              >
+                {courseData.map((data) => (
+                  <option value={data.id} key={data.id}>
+                    {data.courseName}
+                  </option>
+                ))}
+              </select>
+            </td>
+            <br />
             {Object.entries(courseEntry).map(([prop, value]) => (
               <td
                 key={prop}
@@ -220,6 +215,10 @@ function EnrollTable() {
           </tr>
         </tbody>
       </table>
+      <br />
+      <button type="button" style={{ width: 'auto' }} onClick={handelEnrollSubmit}> Enroll Student</button>
+      <br />
+      <h5 className="success">{enrollSuccess}</h5>
     </div>
   )
 }
