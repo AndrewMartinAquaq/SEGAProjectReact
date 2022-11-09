@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import Error from '../error/Error'
 import Warn from '../warn/Warn'
 import './Table.scss'
@@ -12,7 +13,8 @@ function CourseTable() {
     'Subject',
     'Semester',
     'Edit',
-    'Delete'
+    'Delete',
+    'Enroll'
   ]
 
   const options = [
@@ -250,6 +252,11 @@ function CourseTable() {
                   >
                     Delete Row
                   </button>
+                </td>
+                <td className="table-body" key={`${data.id}/enroll`}>
+                  <Link to={`/enroll?courseId=${data.id}`}>
+                    <button type="button">Enroll</button>
+                  </Link>
                 </td>
               </tr>
             ))}

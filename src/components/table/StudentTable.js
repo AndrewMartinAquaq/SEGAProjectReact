@@ -12,6 +12,7 @@ function StudentTable() {
     'Gradutation Year',
     'Edit',
     'Delete',
+    'Enroll',
     'Go to'
   ]
 
@@ -240,9 +241,14 @@ function StudentTable() {
                     Delete Row
                   </button>
                 </td>
+                <td className="table-body" key={`${data.id}/enroll`}>
+                  <Link to={`/enroll?studentId=${data.id}`}>
+                    <button type="button">Enroll</button>
+                  </Link>
+                </td>
                 <td className="table-body" key={`${data.id}/link`}>
                   <Link to={`/students/${data.id}`}>
-                    <button type="button">go to student</button>
+                    <button type="button">Go to student</button>
                   </Link>
                 </td>
               </tr>

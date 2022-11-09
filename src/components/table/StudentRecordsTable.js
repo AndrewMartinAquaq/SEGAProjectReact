@@ -1,6 +1,6 @@
 import { func } from 'prop-types'
 import React, { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, Link } from 'react-router-dom'
 import Header from '../header/header'
 
 function StudentRecordTable(props) {
@@ -18,7 +18,8 @@ function StudentRecordTable(props) {
     'Last Name',
     'Gradutation Year',
     'Edit',
-    'Delete'
+    'Delete',
+    'Enroll'
   ]
 
   const siteCode = 'student'
@@ -124,6 +125,11 @@ function StudentRecordTable(props) {
               <button type="button" onClick={() => { onRemoveRow() }}>
                 Delete Row
               </button>
+            </td>
+            <td className="table-body" key={`${mainData.id}/enroll`}>
+              <Link to={`/enroll?studentId=${mainData.id}`}>
+                <button type="button">Enroll</button>
+              </Link>
             </td>
           </tr>
         </tbody>
