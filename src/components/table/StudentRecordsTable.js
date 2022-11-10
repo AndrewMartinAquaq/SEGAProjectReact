@@ -34,6 +34,11 @@ function StudentRecordTable(props) {
     const valuePrev = rowData[field]
     const student = rowData
     student[field] = value
+    Object.entries(student).forEach(([key, val]) => {
+      if (key !== 'id') {
+        student[key] = String(val).trim()
+      }
+    })
     if (rowToUpdate[field] !== valuePrev) {
       fetch(studentUrl, { method: 'PUT', body: JSON.stringify(student), headers: { 'Content-Type': 'application/json' } })
         .then((response) => {

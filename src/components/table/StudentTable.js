@@ -91,18 +91,25 @@ function StudentTable() {
   }, [mainData, studentMessage])
 
   const updateRow = (value, rowData, field) => {
-    const rowToUpdate = mainData.filter((row) => (row.id === rowData.id))[0]
+    const rowToUpdate = mainData.filter((row) => (row.id === rowData.id))
     const valuePrev = rowData[field]
     const student = rowData
-    student[field] = value
-    if (rowToUpdate[field] !== valuePrev) {
+    student[field] = value.trim()
+    Object.entries(student).forEach(([key, val]) => {
+      if (key !== 'id') {
+        student[key] = String(val).trim()
+      }
+    })
+    if (rowToUpdate[0][field] !== valuePrev) {
       const editUrl = `http://localhost:8080/api/${siteCode}/${rowData.id}`
       fetch(editUrl, { method: 'PUT', body: JSON.stringify(student), headers: { 'Content-Type': 'application/json' } })
         .then((response) => {
           if (response.ok) {
-            rowToUpdate[field] = value
+            rowToUpdate[0][field] = value.trim()
           } else {
-            rowToUpdate[field] = `${valuePrev} `
+            rowToUpdate[0][field] = `${valuePrev} `
+            console.log(`|${rowToUpdate[0][field]}|`)
+            console.log(mainData)
             response.json().then((data) => { setStudentError(data.message) })
           }
         })

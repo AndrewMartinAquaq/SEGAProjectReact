@@ -99,6 +99,11 @@ function CourseTable() {
     const valuePrev = rowData[field]
     const course = rowData
     course[field] = value
+    Object.entries(course).forEach(([key, val]) => {
+      if (key !== 'id') {
+        course[key] = String(val).trim()
+      }
+    })
     const editUrl = `http://localhost:8080/api/${siteCode}/${rowData.id}`
     if (rowToUpdate[field] !== valuePrev) {
       fetch(editUrl, { method: 'PUT', body: JSON.stringify(course), headers: { 'Content-Type': 'application/json' } })
