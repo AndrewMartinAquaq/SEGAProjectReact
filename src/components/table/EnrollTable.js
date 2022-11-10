@@ -48,62 +48,6 @@ function EnrollTable() {
   const setStudentState = (param) => { setSearchParams({ studentId: param.studentId, courseId: courseState.courseId }) }
   const setCourseState = (param) => { setSearchParams({ studentId: studentState.studentId, courseId: param.courseId }) }
 
-  // const [studentState, setStudentState] = useState({
-  //   studentId: 0
-  // })
-
-  // const [courseState, setCourseState] = useState({
-  //   courseId: 0
-  // })
-
-  // useEffect(() => {
-  //   fetch(studentUrl)
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setStudentData(data)
-  //       if (data.length === 0) {
-  //         setStudentEntry({})
-  //         setStudentState({
-  //           studentId: 0
-  //         })
-  //       } else if (studentState.studentId === 'null' || studentState.studentId === null) {
-  //         setStudentEntry(data[0])
-  //         setStudentState({
-  //           studentId: data[0].id
-  //         })
-  //       } else {
-  //         const student = () => data.filter((row) => (row.id === parseInt(studentState.studentId, 10)))
-  //         if (student.length === 0) {
-  //           setStudentEntry(data[0])
-  //           setStudentState({
-  //             studentId: data[0].id
-  //           })
-  //         } else {
-  //           setStudentEntry(student[0])
-  //         }
-  //       }
-  //     })
-  // }, [studentUrl])
-
-  // useEffect(() => {
-  //   fetch(courseUrl)
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setCourseData(data)
-  //       if (data.length === 0) {
-  //         setCourseEntry({})
-  //         setCourseState({
-  //           courseId: 0
-  //         })
-  //       } else {
-  //         setCourseEntry(data[0])
-  //         setCourseState({
-  //           courseId: data[0].id
-  //         })
-  //       }
-  //     })
-  // }, [courseUrl])
-
   const renderStudent = () => (
     fetch(studentUrl)
       .then((response) => response.json())
@@ -223,6 +167,13 @@ function EnrollTable() {
     return 'table-head'
   }
 
+  const disableButton = () => {
+    if (studentState.studentId === 0 || courseState.courseId === 0) {
+      return true
+    }
+    return false
+  }
+
   return (
     <div>
       <Header header="Enroll Table - " />
@@ -311,7 +262,7 @@ function EnrollTable() {
         </tbody>
       </table>
       <br />
-      <button type="button" style={{ width: 'auto' }} onClick={handelEnrollSubmit}> Enroll Student</button>
+      <button type="button" style={{ width: 'auto' }} onClick={handelEnrollSubmit} disabled={disableButton()}> Enroll Student</button>
       <br />
       <h5 className="success">{enrollSuccess}</h5>
     </div>
