@@ -108,8 +108,6 @@ function StudentTable() {
             rowToUpdate[0][field] = value.trim()
           } else {
             rowToUpdate[0][field] = `${valuePrev} `
-            console.log(`|${rowToUpdate[0][field]}|`)
-            console.log(mainData)
             response.json().then((data) => { setStudentError(data.message) })
           }
         })
