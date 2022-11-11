@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, Link } from 'react-router-dom'
 import Header from '../header/header'
 import Error from '../error/Error'
 
@@ -10,7 +10,8 @@ function EnrollTable() {
     'Id',
     'First Name',
     'Last Name',
-    'Gradutation Year'
+    'Gradutation Year',
+    'Go to'
   ]
 
   const courseHeaderCols = [
@@ -125,18 +126,32 @@ function EnrollTable() {
   }, [])
 
   const handleStudentChange = ({ target }) => {
-    setStudentState({
-      studentId: target.value
-    })
+    if (courseState.courseId === 'null' || courseState.courseId === null) {
+      setSearchParams({
+        studentId: target.value, courseId: courseEntry.id
+      })
+    } else {
+      setStudentState({
+        studentId: target.value
+      })
+    }
+
     setStudentEntry(studentData.filter((row) => (row.id === parseInt(target.value, 10)))[0])
     setEnrollError('')
     setEnrollSuccess('')
   }
 
   const handleCourseChange = ({ target }) => {
-    setCourseState({
-      courseId: target.value
-    })
+    if (studentState.studentId === 'null' || studentState.studentId === null) {
+      setSearchParams({
+        studentId: studentEntry.id, courseId: target.value
+      })
+    } else {
+      setCourseState({
+        courseId: target.value
+      })
+    }
+
     setCourseEntry(courseData.filter((row) => (row.id === parseInt(target.value, 10)))[0])
     setEnrollError('')
     setEnrollSuccess('')
@@ -145,7 +160,7 @@ function EnrollTable() {
   const enrollUrl = `${url}enroll`
 
   const handelEnrollSubmit = () => {
-    const enroll = { studentId: studentState.studentId, courseId: courseState.courseId }
+    const enroll = { studentId: studentEntry.id, courseId: courseEntry.id }
     fetch(enrollUrl, { method: 'POST', body: JSON.stringify(enroll), headers: { 'Content-Type': 'application/json' } })
       .then((response) => {
         if (!response.ok) {
@@ -217,6 +232,11 @@ function EnrollTable() {
                 {value}
               </td>
             ))}
+            <td className="table-body" key={`${studentEntry.id}/link`}>
+              <Link to={`/students/${studentEntry.id}`}>
+                <button type="button">Go to student</button>
+              </Link>
+            </td>
           </tr>
         </tbody>
       </table>
