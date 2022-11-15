@@ -49,10 +49,18 @@ function StudentTable() {
       setStudentUrl(`http://localhost:8080/api/${siteCode}`)
       setHideFilter(true)
     } else if (state.selectedOption === 'name') {
-      setStudentUrl(`http://localhost:8080/api/${siteCode}/name?name=${searchData}`)
+      if (searchData === '') {
+        setStudentUrl(`http://localhost:8080/api/${siteCode}`)
+      } else {
+        setStudentUrl(`http://localhost:8080/api/${siteCode}/name?name=${searchData}`)
+      }
       setHideFilter(false)
     } else if (state.selectedOption === 'semester') {
-      setStudentUrl(`http://localhost:8080/api/${siteCode}/semester?semester=${searchData}`)
+      if (searchData === '') {
+        setStudentUrl(`http://localhost:8080/api/${siteCode}`)
+      } else {
+        setStudentUrl(`http://localhost:8080/api/${siteCode}/semester?semester=${searchData}`)
+      }
       setHideFilter(false)
     }
   }, [state, searchData])

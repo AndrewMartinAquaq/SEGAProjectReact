@@ -7,6 +7,7 @@ import NoPage from './pages/nopage/NoPage'
 import StudentRecord from './pages/studentRecord/StudentRecord'
 import Course from './pages/course/Course'
 import Enroll from './pages/enroll/Enroll'
+import CourseRecord from './pages/courseRecord/courseRecord'
 import './App.scss'
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="students" element={<Student />} />
           <Route path="students/:studentId" element={<StudentRecord />} />
           <Route path="courses" element={<Course />} />
+          <Route path="courses/:courseId" element={<CourseRecord />} />
           <Route path="enroll" element={<Enroll />} />
           <Route path="*" element={<NoPage />} />
         </Route>

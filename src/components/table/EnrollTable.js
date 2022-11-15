@@ -22,7 +22,8 @@ function EnrollTable() {
     'Capacity',
     'Credit',
     'Subject',
-    'Semester'
+    'Semester',
+    'Go to'
   ]
 
   const courseSiteCode = 'course'
@@ -278,6 +279,11 @@ function EnrollTable() {
                 {value}
               </td>
             ))}
+            <td className="table-body" key={`${courseEntry.id}/link`}>
+              <Link to={`/courses/${courseEntry.id}`}>
+                <button type="button">Go to course</button>
+              </Link>
+            </td>
           </tr>
         </tbody>
       </table>

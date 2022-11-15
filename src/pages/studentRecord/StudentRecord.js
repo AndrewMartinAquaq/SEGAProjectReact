@@ -4,7 +4,7 @@ import StudentCoursesTable from '../../components/table/StudentCoursesTable'
 import Error from '../../components/error/Error'
 import Warn from '../../components/warn/Warn'
 
-function Student() {
+function StudentRecord() {
   const [error, setError] = useState('')
 
   const [rowToDelete, setRowToDelete] = useState({ id: 0 })
@@ -33,4 +33,4 @@ function Student() {
   )
 }
 
-export default Student
+export default StudentRecord

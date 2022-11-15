@@ -14,7 +14,8 @@ function CourseTable() {
     'Semester',
     'Edit',
     'Delete',
-    'Enroll'
+    'Enroll',
+    'Go to'
   ]
 
   const options = [
@@ -50,13 +51,16 @@ function CourseTable() {
     } else if (state.selectedOption === 'subject') {
       if (searchData === '') {
         setCourseUrl(`http://localhost:8080/api/${siteCode}`)
-        setHideFilter(false)
       } else {
         setCourseUrl(`http://localhost:8080/api/${siteCode}?subject=${searchData}`)
-        setHideFilter(false)
       }
+      setHideFilter(false)
     } else if (state.selectedOption === 'name') {
-      setCourseUrl(`http://localhost:8080/api/${siteCode}/name?name=${searchData}`)
+      if (searchData === '') {
+        setCourseUrl(`http://localhost:8080/api/${siteCode}`)
+      } else {
+        setCourseUrl(`http://localhost:8080/api/${siteCode}/name?name=${searchData}`)
+      }
       setHideFilter(false)
     }
   }, [searchData, state])
@@ -261,6 +265,11 @@ function CourseTable() {
                 <td className="table-body" key={`${data.id}/enroll`}>
                   <Link to={`/enroll?courseId=${data.id}`}>
                     <button type="button">Enroll</button>
+                  </Link>
+                </td>
+                <td className="table-body" key={`${data.id}/link`}>
+                  <Link to={`/courses/${data.id}`}>
+                    <button type="button">Go to course</button>
                   </Link>
                 </td>
               </tr>

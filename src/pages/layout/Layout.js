@@ -17,10 +17,16 @@ function Layout() {
       return 'selected'
     }
 
-    const regex = /^\/students\/\d*$/g
-    if (regex.test(location.pathname) && link === '/students') {
+    const studentRegex = /^\/students\/\d*$/g
+    if (studentRegex.test(location.pathname) && link === '/students') {
       return 'selected'
     }
+
+    const courseRegex = /^\/courses\/\d*$/g
+    if (courseRegex.test(location.pathname) && link === '/courses') {
+      return 'selected'
+    }
+
     return 'linkitem'
   }
 

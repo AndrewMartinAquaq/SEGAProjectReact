@@ -1,6 +1,6 @@
 import { func } from 'prop-types'
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 
 function StudentCoursesTable(props) {
   const params = useParams()
@@ -16,7 +16,8 @@ function StudentCoursesTable(props) {
     'Credit',
     'Subject',
     'Semester',
-    'Unenroll'
+    'Unenroll',
+    'Go to'
   ]
 
   const [semesterData, setSemesterData] = useState('')
@@ -108,6 +109,11 @@ function StudentCoursesTable(props) {
                 <button type="button" onClick={() => { onUnenroll(data) }}>
                   Unenroll
                 </button>
+              </td>
+              <td className="table-body" key={`${data.id}/link`}>
+                <Link to={`/courses/${data.id}`}>
+                  <button type="button">Go to course</button>
+                </Link>
               </td>
             </tr>
           ))}
