@@ -228,6 +228,7 @@ function StudentTable() {
                     className={handelEditBorder(data.id, prop)}
                     name={prop}
                     contentEditable={(data.id === editingRow) && (prop !== 'id')}
+                    suppressContentEditableWarning="true"
                 // eslint-disable-next-line react/no-unknown-property
                     field={prop}
                     onBlur={(event) => {
