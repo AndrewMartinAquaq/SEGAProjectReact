@@ -94,6 +94,11 @@ function StudentRecordTable(props) {
   return (
     <div>
       <Header header="Student Records Table - " />
+      <Link to="/students">
+        <button type="button" style={{ width: 'auto' }}>Return to Student Table</button>
+      </Link>
+      <br />
+      <br />
       <table>
         <thead>
           <tr>

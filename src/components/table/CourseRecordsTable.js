@@ -100,6 +100,11 @@ function CourseRecordTable() {
       <Error error={courseError} setError={setCourseError} />
       <Warn message={deleteMessage} onWarn={() => removeRow()} toUpdate={rowToDelete} setToUpdate={setRowToDelete} />
       <Header header="Course Records Table - " />
+      <Link to="/courses">
+        <button type="button" style={{ width: 'auto' }}>Return to Course Table</button>
+      </Link>
+      <br />
+      <br />
       <table>
         <thead>
           <tr>
