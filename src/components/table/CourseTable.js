@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import Error from '../error/Error'
 import Warn from '../warn/Warn'
@@ -43,6 +43,9 @@ function CourseTable() {
   const [state, setState] = useState({
     selectedOption: 'none'
   })
+
+  const bottomRef = useRef(null)
+  const topRef = useRef(null)
 
   useEffect(() => {
     if (state.selectedOption === 'none') {
@@ -193,7 +196,8 @@ function CourseTable() {
   }
 
   return (
-    <div>
+    <div style={{ width: 'fit-content' }}>
+      <div ref={topRef} />
       <Error error={courseError} setError={setCourseError} />
       <Warn message={deleteMessage} onWarn={() => removeRow(rowToDelete)} toUpdate={rowToDelete} setToUpdate={setRowToDelete} />
       <label>
@@ -214,6 +218,13 @@ function CourseTable() {
         value={searchData}
         onChange={(e) => setSearchData(e.target.value)}
       />
+      <button
+        type="button"
+        style={{ width: 'auto', float: 'right' }}
+        onClick={() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }) }}
+      >
+        Go to bottom
+      </button>
       <br />
       <br />
       <form onSubmit={handleSubmit}>
@@ -331,9 +342,17 @@ function CourseTable() {
       </form>
       <br />
       <button type="button" onClick={() => handelHideForm()} style={{ width: 'fit-content' }}>{formButton}</button>
+      <button
+        type="button"
+        style={{ width: 'auto', float: 'right' }}
+        onClick={() => { topRef.current?.scrollIntoView({ behavior: 'smooth' }) }}
+      >
+        Go to top
+      </button>
       <br />
       <h4>{courseMessage}</h4>
       <br />
+      <div ref={bottomRef} />
     </div>
   )
 }

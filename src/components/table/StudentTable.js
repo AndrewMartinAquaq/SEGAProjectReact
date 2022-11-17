@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import Error from '../error/Error'
 import Warn from '../warn/Warn'
@@ -43,6 +43,9 @@ function StudentTable() {
   })
 
   const [searchData, setSearchData] = useState('')
+
+  const bottomRef = useRef(null)
+  const topRef = useRef(null)
 
   useEffect(() => {
     if (state.selectedOption === 'none') {
@@ -188,11 +191,10 @@ function StudentTable() {
   }
 
   return (
-    <div>
-      <div>
-        <Error error={studentError} setError={setStudentError} />
-        <Warn message={deleteMessage} onWarn={() => removeRow(rowToDelete)} toUpdate={rowToDelete} setToUpdate={setRowToDelete} />
-      </div>
+    <div style={{ width: 'fit-content' }}>
+      <div ref={topRef} />
+      <Error error={studentError} setError={setStudentError} />
+      <Warn message={deleteMessage} onWarn={() => removeRow(rowToDelete)} toUpdate={rowToDelete} setToUpdate={setRowToDelete} />
       <label>
         {' Filter Type: '}
       </label>
@@ -206,6 +208,13 @@ function StudentTable() {
         {` Filter by ${state.selectedOption}: `}
       </label>
       <input type="text" value={searchData} onChange={(e) => setSearchData(e.target.value)} hidden={hideFilter} />
+      <button
+        type="button"
+        style={{ width: 'auto', float: 'right' }}
+        onClick={() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }) }}
+      >
+        Go to bottom
+      </button>
       <br />
       <br />
       <form onSubmit={handleSubmit}>
@@ -307,9 +316,17 @@ function StudentTable() {
       </form>
       <br />
       <button type="button" onClick={() => handelHideForm()} style={{ width: 'fit-content' }}>{formButton}</button>
+      <button
+        type="button"
+        style={{ width: 'auto', float: 'right' }}
+        onClick={() => { topRef.current?.scrollIntoView({ behavior: 'smooth' }) }}
+      >
+        Go to top
+      </button>
       <br />
       <h4>{studentMessage}</h4>
       <br />
+      <div ref={bottomRef} />
     </div>
   )
 }
