@@ -206,7 +206,7 @@ function EnrollTable() {
         </thead>
         <tbody>
           <tr key={studentEntry}>
-            <td className="table-body">
+            <td className="table-body" style={{ width: '12rem', 'max-width': '12rem' }}>
               <select
                 className="dropdown"
                 value={studentState.studentId}
@@ -217,6 +217,8 @@ function EnrollTable() {
                     {data.firstName}
                     {' '}
                     {data.lastName}
+                    {' - '}
+                    {data.graduationDate}
                   </option>
                 ))}
               </select>
@@ -254,7 +256,7 @@ function EnrollTable() {
         </thead>
         <tbody>
           <tr key={courseEntry}>
-            <td className="table-body">
+            <td className="table-body" style={{ width: '12rem', 'max-width': '12rem' }}>
               <select
                 className="dropdown"
                 value={courseState.courseId}
@@ -263,6 +265,8 @@ function EnrollTable() {
                 {courseData.map((data) => (
                   <option value={data.id} key={data.id}>
                     {data.courseName}
+                    {' - '}
+                    {data.semester}
                   </option>
                 ))}
               </select>

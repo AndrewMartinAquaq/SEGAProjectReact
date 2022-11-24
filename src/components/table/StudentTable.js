@@ -62,6 +62,7 @@ function StudentTable() {
         setStudentUrl(`http://localhost:8080/api/${siteCode}`)
       } else {
         setStudentUrl(`http://localhost:8080/api/${siteCode}/name?name=${searchData}`)
+        setPage(0)
       }
       setHideFilter(false)
     } else if (state.selectedOption === 'semester') {
@@ -69,6 +70,7 @@ function StudentTable() {
         setStudentUrl(`http://localhost:8080/api/${siteCode}`)
       } else {
         setStudentUrl(`http://localhost:8080/api/${siteCode}/semester?semester=${searchData}`)
+        setPage(0)
       }
       setHideFilter(false)
     }

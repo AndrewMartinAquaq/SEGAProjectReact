@@ -62,6 +62,7 @@ function CourseTable() {
         setCourseUrl(`http://localhost:8080/api/${siteCode}`)
       } else {
         setCourseUrl(`http://localhost:8080/api/${siteCode}?subject=${searchData}`)
+        setPage(0)
       }
       setHideFilter(false)
     } else if (state.selectedOption === 'name') {
@@ -69,6 +70,7 @@ function CourseTable() {
         setCourseUrl(`http://localhost:8080/api/${siteCode}`)
       } else {
         setCourseUrl(`http://localhost:8080/api/${siteCode}/name?name=${searchData}`)
+        setPage(0)
       }
       setHideFilter(false)
     }
