@@ -44,8 +44,14 @@ function StudentTable() {
 
   const [searchData, setSearchData] = useState('')
 
+  const [pageData, setPageData] = useState([])
+
+  const [page, setPage] = useState(0)
+
   const bottomRef = useRef(null)
   const topRef = useRef(null)
+
+  const pageLength = 5
 
   useEffect(() => {
     if (state.selectedOption === 'none') {
@@ -128,7 +134,12 @@ function StudentTable() {
   const removeRow = ((rowData) => {
     const deleteUrl = `http://localhost:8080/api/${siteCode}/${rowData.id}`
     fetch(deleteUrl, { method: 'DELETE' })
-      .then(() => setMainData(mainData.filter((row) => (row.id !== rowData.id))))
+      .then(() => {
+        setMainData(mainData.filter((row) => (row.id !== rowData.id)))
+        if (pageData.length === 1 && page !== 0) {
+          setPage(page - 1)
+        }
+      })
   })
 
   const [inputs, setInputs] = useState({})
@@ -190,6 +201,30 @@ function StudentTable() {
     })
   }
 
+  const hidePrev = () => {
+    if (page === 0 || mainData.length === 0) {
+      return 'hidden'
+    }
+    return 'visible'
+  }
+
+  const hideNext = () => {
+    if (page === Math.ceil((mainData.length) / pageLength) - 1 || mainData.length === 0) {
+      return 'hidden'
+    }
+    return 'visible'
+  }
+
+  useEffect(() => {
+    const dataLength = mainData.length
+    const pageAmount = Math.ceil((dataLength) / pageLength)
+    if (pageAmount * pageLength > mainData) {
+      setPageData(mainData.slice(page * pageLength, page * pageLength + (dataLength % pageLength)))
+    } else {
+      setPageData(mainData.slice(page * pageLength, page * pageLength + pageLength))
+    }
+  }, [mainData, page])
+
   return (
     <div style={{ width: 'fit-content' }}>
       <div ref={topRef} />
@@ -229,7 +264,7 @@ function StudentTable() {
             </tr>
           </thead>
           <tbody>
-            {mainData.map((data) => (
+            {pageData.map((data) => (
               <tr key={data.id}>
                 {Object.entries(data).map(([prop, value]) => (
                   <td
@@ -316,6 +351,42 @@ function StudentTable() {
       </form>
       <br />
       <button type="button" onClick={() => handelHideForm()} style={{ width: 'fit-content' }}>{formButton}</button>
+      <div className="nav-button-con">
+        <div style={{ width: 'auto', 'margin-left': '3px' }}>
+          {`Page ${(mainData.length === 0) ? 0 : page + 1}/${Math.ceil((mainData.length) / pageLength)}`}
+        </div>
+        <button
+          type="button"
+          style={{ width: 'auto', 'margin-left': '5px', visibility: hidePrev() }}
+          onClick={() => { setPage(0) }}
+        >
+          First
+        </button>
+        <button
+          type="button"
+          style={{ width: 'auto', 'margin-left': '5px', visibility: hidePrev() }}
+          onClick={() => { setPage(page - 1) }}
+        >
+          Previous
+        </button>
+        {' '}
+        <button
+          type="button"
+          style={{ width: 'auto', 'margin-left': '5px', visibility: hideNext() }}
+          onClick={() => { setPage(page + 1) }}
+        >
+          Next
+        </button>
+        <button
+          type="button"
+          style={{ width: 'auto', 'margin-left': '5px', visibility: hideNext() }}
+          onClick={() => { setPage(Math.ceil((mainData.length) / pageLength) - 1) }}
+        >
+          Last
+        </button>
+      </div>
+      <br />
+      <h4>{studentMessage}</h4>
       <button
         type="button"
         style={{ width: 'auto', float: 'right' }}
@@ -323,10 +394,9 @@ function StudentTable() {
       >
         Go to top
       </button>
-      <br />
-      <h4>{studentMessage}</h4>
-      <br />
       <div ref={bottomRef} />
+      <br />
+      <br />
     </div>
   )
 }

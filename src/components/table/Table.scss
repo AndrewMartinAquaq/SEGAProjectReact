@@ -68,6 +68,14 @@ button:active{
   margin-right: auto;
 }
 
+.nav-button-con{
+  float: right;
+  background-color: $brand-bg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 
 
 
